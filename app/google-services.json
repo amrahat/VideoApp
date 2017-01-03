@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "86985851323",
+    "firebase_url": "https://videoapp-32254.firebaseio.com",
+    "project_id": "videoapp-32254",
+    "storage_bucket": "videoapp-32254.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86985851323:android:8ff1af81521db8af",
+        "android_client_info": {
+          "package_name": "net.optimusbs.videoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86985851323-jnankik894oi8m7qj5imj94vtnqvjv5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.optimusbs.videoapp",
+            "certificate_hash": "CE852DA4841B8D1136E9E793B06C1DC86800E9DC"
+          }
+        },
+        {
+          "client_id": "86985851323-ekvnnum19nh1n5lf73rj751h8vs78bin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8dMKPOGIWndOoGTlMAKQbQoVPpJg87Wo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86985851323-ekvnnum19nh1n5lf73rj751h8vs78bin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

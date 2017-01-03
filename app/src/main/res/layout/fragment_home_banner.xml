@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.optimusbs.videoapp.Fragments.HomeBannerFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:id="@+id/top_player_layout"
+        android:layout_width="match_parent"
+        android:background="@color/thumbnail_background_color"
+        android:layout_height="130dp">
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_player_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+        </com.google.android.youtube.player.YouTubeThumbnailView>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/play1"
+            android:visibility="gone"
+            android:text="@string/icon_youtube_play"
+            android:textColor="@color/color_youtube_play"
+            android:textSize="@dimen/size_youtube_play" />
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/loader1"
+            android:gravity="center"
+            android:text="@string/icon_youtube_loader"
+            android:textColor="@color/color_youtube_loader"
+            android:textSize="@dimen/size_youtube_loader" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/top_player_layout"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/thumbnail_background_color"
+            android:layout_margin="5dp"
+
+            android:layout_weight="1">
+
+            <com.google.android.youtube.player.YouTubeThumbnailView
+                android:id="@+id/youtube_player_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+            </com.google.android.youtube.player.YouTubeThumbnailView>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/icon_youtube_play"
+                android:id="@+id/play2"
+                android:textColor="@color/color_youtube_play"
+                android:textSize="@dimen/size_youtube_play"
+                android:visibility="gone"
+                />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/loader2"
+
+                android:text="@string/icon_youtube_loader"
+                android:textColor="@color/color_youtube_loader"
+                android:textSize="@dimen/size_youtube_loader" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/thumbnail_background_color"
+            android:layout_margin="5dp"
+            android:layout_weight="1">
+
+            <com.google.android.youtube.player.YouTubeThumbnailView
+                android:id="@+id/youtube_player_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            </com.google.android.youtube.player.YouTubeThumbnailView>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/icon_youtube_play"
+                android:id="@+id/play3"
+                android:textColor="@color/color_youtube_play"
+                android:textSize="@dimen/size_youtube_play"
+                android:visibility="gone"
+                />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/loader3"
+                android:gravity="center"
+                android:text="@string/icon_youtube_loader"
+                android:textColor="@color/color_youtube_loader"
+                android:textSize="@dimen/size_youtube_loader" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

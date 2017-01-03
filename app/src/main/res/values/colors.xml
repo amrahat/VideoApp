@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="color_youtube_play">#e62117</color>
+    <color name="color_youtube_loader">#ffffff</color>
+    <color name="thumbnail_background_color">#000000</color>
+    <color name="title_back_pressed">#a3a3a3</color>
+
+
+
+
+</resources>
