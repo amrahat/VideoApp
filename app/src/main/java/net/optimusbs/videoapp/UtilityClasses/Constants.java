@@ -5,6 +5,8 @@ package net.optimusbs.videoapp.UtilityClasses;
  */
 
 public class Constants {
+    public static final String HOME_BANNER_REF = "home-banners";
+    public static final String TAG_REF = "tags";
     public static final String API_KEY = "AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +

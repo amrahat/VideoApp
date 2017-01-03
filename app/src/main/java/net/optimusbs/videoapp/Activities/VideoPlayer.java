@@ -59,6 +59,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
 
     String videoId;
+    Video video;
 
     boolean description_layout_visible = false;
 
@@ -68,14 +69,28 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.fragment_youtube_player);
         ButterKnife.inject(this);
-        videoId = getIntent().getBundleExtra("bundle").getString("video_id");
-        getVideoData();
         YouTubePlayerView playerView = (YouTubePlayerView) findViewById(R.id.player);
         playerView.initialize(Constants.API_KEY, this);
+        getIntentData();
+
+
+    }
+
+    private void getIntentData() {
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        if(bundle.containsKey("video_id")){
+            videoId = getIntent().getBundleExtra("bundle").getString("video_id");
+            getVideoData();
+        }else if(bundle.containsKey("video")){
+            video = (Video) bundle.getSerializable("video");
+            videoId = video.getId();
+            setUpViews(video);
+        }
     }
 
     private void getVideoData() {
         String url = Constants.getDataUrl(videoId);
+        Log.d("url",url);
         VolleyRequest.sendRequestGet(this, url, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
@@ -92,6 +107,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             JSONObject snippetObject = itemsObject.getJSONObject("snippet");
             JSONObject statisticsObject = itemsObject.getJSONObject("statistics");
             String videoId = itemsObject.getString("id");
+            String thumbnail = snippetObject.getJSONObject("thumbnails").getJSONObject("default").getString("url");
             String publishedAt = snippetObject.getString("publishedAt");
             String title = snippetObject.getString("title");
             String description = snippetObject.getString("description");
@@ -99,7 +115,8 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             String likeCount = statisticsObject.getString("likeCount");
             String commentCount = statisticsObject.getString("commentCount");
 
-            Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount);
+
+            Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount,thumbnail);
 
             setUpViews(video);
         } catch (JSONException e) {

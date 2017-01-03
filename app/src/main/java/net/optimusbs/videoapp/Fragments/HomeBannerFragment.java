@@ -1,10 +1,12 @@
 package net.optimusbs.videoapp.Fragments;
 
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,9 +16,13 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import net.optimusbs.videoapp.Activities.HomeActivity;
 import net.optimusbs.videoapp.Activities.VideoPlayer;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,13 +30,18 @@ import net.optimusbs.videoapp.UtilityClasses.Constants;
 public class HomeBannerFragment extends Fragment {
     //YouTubePlayerView/* playerView1,*/ ;
     YouTubeThumbnailView playerView1, playerView2, playerView3;
-    String[] videoIdArray;
+    ArrayList<String> videoIdList;
 
     IconTextView loader1, loader2, loader3, play1, play2, play3;
-
+    OnSwipe onSwipe;
     public HomeBannerFragment() {
         // Required empty public constructor
     }
+
+    public HomeBannerFragment(OnSwipe onSwipe){
+        this.onSwipe = onSwipe;
+    }
+
 
 
     @Override
@@ -49,20 +60,14 @@ public class HomeBannerFragment extends Fragment {
     private void getBundleData() {
         Bundle bundle = getArguments();
 
-        videoIdArray = bundle.getStringArray("video_id_array");
-
-       /* getFragmentManager().beginTransaction().replace(R.id.youtube_player_1, new VideoPlayerFragment()).commit();
-        getFragmentManager().beginTransaction().replace(R.id.youtube_player_2, new VideoPlayerFragment()).commit();
-        getFragmentManager().beginTransaction().replace(R.id.youtube_player_3, new VideoPlayerFragment()).commit();*/
-
-
-        if (videoIdArray != null) initializeVideos();
+        videoIdList = bundle.getStringArrayList("video_id_array");
+        if (videoIdList != null) initializeVideos();
     }
 
     private void initializeVideos() {
-        initializePlayerViewAndPlay(videoIdArray[0], playerView1, loader1, play1);
-        initializePlayerViewAndPlay(videoIdArray[1], playerView2, loader2, play2);
-        initializePlayerViewAndPlay(videoIdArray[2], playerView3, loader3, play3);
+        initializePlayerViewAndPlay(videoIdList.get(0), playerView1, loader1, play1);
+        initializePlayerViewAndPlay(videoIdList.get(1), playerView2, loader2, play2);
+        initializePlayerViewAndPlay(videoIdList.get(2), playerView3, loader3, play3);
 
     }
 
@@ -78,36 +83,18 @@ public class HomeBannerFragment extends Fragment {
         play2 = (IconTextView) view.findViewById(R.id.play2);
         play3 = (IconTextView) view.findViewById(R.id.play3);
 
-        /*playerView1 = (LinearLayout) view.findViewById(R.id.youtube_player_1);
-        playerView2 = (LinearLayout) view.findViewById(R.id.youtube_player_2);
-        playerView3 = (LinearLayout) view.findViewById(R.id.youtube_player_3);*/
-
 
     }
 
 
     private void initializePlayerViewAndPlay(final String videoId, YouTubeThumbnailView playerView, final IconTextView loader, final IconTextView play) {
-        /*playerView.initialize(Constants.API_KEY, new YouTubePlayer.OnInitializedListener() {
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-                if(!b) {
-                    youTubePlayer.cueVideo(videoId);
-                    youTubePlayer.play();
-                 //   initializePlayerViewAndPlay(videoIdArray[1],playerView2);
 
-                }
-            }
-
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-
-            }
-        });*/
 
         playerView.initialize(Constants.API_KEY, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
                 youTubeThumbnailLoader.setVideo(videoId);
+                Log.d("videoId", videoId);
                 youTubeThumbnailLoader.setOnThumbnailLoadedListener(new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
                     @Override
                     public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
@@ -130,25 +117,56 @@ public class HomeBannerFragment extends Fragment {
             }
         });
 
-        playerView.setOnClickListener(new View.OnClickListener() {
+        /*playerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //   VideoPlayerFragment videoPlayerFragment = new VideoPlayerFragment();
-              //  Toast.makeText(getActivity(), videoId, Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent(getActivity(), VideoPlayer.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("video_id",videoId);
+                bundle.putString("video_id", videoId);
 
-                intent.putExtra("bundle",bundle);
+                intent.putExtra("bundle", bundle);
 
                 startActivity(intent);
 
-                /*videoPlayerFragment.setArguments(bundle);
+            }
+        });*/
 
-                getFragmentManager().beginTransaction().replace(R.id.activity_main,videoPlayerFragment).addToBackStack("video").commit();
- */           }
+        playerView.setOnTouchListener(new OnSwipeTouchListener(getActivity()){
+            @Override
+            public void onClick() {
+                super.onClick();
+
+                Intent intent = new Intent(getActivity(), VideoPlayer.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("video_id", videoId);
+
+                intent.putExtra("bundle", bundle);
+
+                startActivity(intent);
+            }
+
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                Log.d("swipe","onplayerright");
+                onSwipe.onSwipeRightFromFragment();
+
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                Log.d("swipe","onplayerleft");
+                onSwipe.onSwipeLeftFromFragment();
+            }
+
+
         });
+    }
+
+    public interface OnSwipe{
+        public void onSwipeLeftFromFragment();
+        public void onSwipeRightFromFragment();
     }
 
 

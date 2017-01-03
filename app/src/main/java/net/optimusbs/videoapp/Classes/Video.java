@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 
 public class Video implements Serializable {
-    String id,title,description,publishedAt,viewCount,likeCount,commentCount;
+    String id,title,description,publishedAt,viewCount,likeCount,commentCount,thumbnail;
 
-    public Video(String id, String title, String description, String publishedAt, String viewCount, String likeCount, String commentCount) {
+    public Video(String id, String title, String description, String publishedAt, String viewCount, String likeCount, String commentCount,String thumbnail) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -17,6 +17,16 @@ public class Video implements Serializable {
         this.viewCount = viewCount;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        this.thumbnail = thumbnail;
+
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getId() {
