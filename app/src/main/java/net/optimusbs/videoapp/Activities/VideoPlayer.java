@@ -3,6 +3,9 @@ package net.optimusbs.videoapp.Activities;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,11 +17,17 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.Classes.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
@@ -26,6 +35,8 @@ import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -57,12 +68,15 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     @InjectView(R.id.titleLayout)
     RelativeLayout titleLayout;
 
+    @InjectView(R.id.related_videos_list)
+    RecyclerView relatedVideosList;
+
 
     String videoId;
     Video video;
 
     boolean description_layout_visible = false;
-
+    String tag;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +85,16 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         ButterKnife.inject(this);
         YouTubePlayerView playerView = (YouTubePlayerView) findViewById(R.id.player);
         playerView.initialize(Constants.API_KEY, this);
+        initializeRecyclerView();
         getIntentData();
 
 
+    }
+
+    private void initializeRecyclerView() {
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        relatedVideosList.setLayoutManager(mLayoutManager);
+        relatedVideosList.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void getIntentData() {
@@ -86,6 +107,33 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             videoId = video.getId();
             setUpViews(video);
         }
+        tag = bundle.getString("tag");
+
+        if(tag!=null && !tag.isEmpty()){
+            getRelatedVideosByTag(tag);
+        }
+
+
+    }
+
+    private void getRelatedVideosByTag(final String tag) {
+        DatabaseReference tagRef = FirebaseDatabase.getInstance().getReference(Constants.TAG_REF);
+        tagRef.child(tag).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
+                videoList.remove(videoId);
+              //  Log.d("videoremove", String.valueOf(videoList.contains(video)));
+
+                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
+
+                relatedVideosList.setAdapter(videoListByTagAdapter);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getVideoData() {
@@ -112,7 +160,13 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             String title = snippetObject.getString("title");
             String description = snippetObject.getString("description");
             String viewCount = statisticsObject.getString("viewCount");
-            String likeCount = statisticsObject.getString("likeCount");
+
+            String likeCount;
+            if(statisticsObject.has("likeCount")){
+                likeCount = statisticsObject.getString("likeCount");
+            }else{
+                likeCount = "0";
+            }
             String commentCount = statisticsObject.getString("commentCount");
 
 

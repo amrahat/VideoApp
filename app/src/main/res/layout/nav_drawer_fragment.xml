@@ -1,0 +1,11 @@
+<fragment
+    android:id="@+id/fragment_navigation_drawer"
+    android:name="net.optimusbs.videoapp.Fragments.NavigationDrawerFragment"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    app:layout="@layout/fragment_nav_drawer"
+    tools:layout="@layout/fragment_nav_drawer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" />

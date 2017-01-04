@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/nav_drawer_menu_padding"
+        android:background="@drawable/nav_drawer_menu_background"
+        android:id="@+id/home">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_home"
+            android:textSize="@dimen/nav_drawer_menu_icon_size"
+            android:textColor="@color/nav_drawer_icon_color"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:textColor="@color/nav_drawer_text_color"
+            android:text="Home"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/nav_drawer_menu_padding"
+        android:background="@drawable/nav_drawer_menu_background"
+        android:id="@+id/all_videos">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_youtube_play"
+            android:textSize="@dimen/nav_drawer_menu_icon_size"
+            android:textColor="@color/nav_drawer_icon_color"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:textColor="@color/nav_drawer_text_color"
+            android:text="All Videos"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/nav_drawer_menu_padding"
+        android:background="@drawable/nav_drawer_menu_background"
+        android:id="@+id/tags">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_tags"
+            android:textSize="@dimen/nav_drawer_menu_icon_size"
+            android:textColor="@color/nav_drawer_icon_color"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:textColor="@color/nav_drawer_text_color"
+            android:text="Tags"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/nav_drawer_menu_padding"
+        android:background="@drawable/nav_drawer_menu_background"
+        android:id="@+id/saved_searches">
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_search"
+            android:textSize="@dimen/nav_drawer_menu_icon_size"
+            android:textColor="@color/nav_drawer_icon_color"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:textColor="@color/nav_drawer_text_color"
+            android:text="Saved Searches"/>
+    </LinearLayout>
+
+</LinearLayout>

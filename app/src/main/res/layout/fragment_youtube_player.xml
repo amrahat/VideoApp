@@ -1,117 +1,137 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="net.optimusbs.videoapp.Fragments.VideoPlayerFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <com.google.android.youtube.player.YouTubePlayerView
+    android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/player">
+        android:orientation="vertical"
+        tools:context="net.optimusbs.videoapp.Fragments.VideoPlayerFragment">
 
-    </com.google.android.youtube.player.YouTubePlayerView>
+        <!-- TODO: Update blank fragment layout -->
+        <com.google.android.youtube.player.YouTubePlayerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/player">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/video_title_back"
-        android:id="@+id/titleLayout">
-        <TextView
-            android:layout_width="wrap_content"
+        </com.google.android.youtube.player.YouTubePlayerView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/video_title_back"
+            android:id="@+id/titleLayout">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:id="@+id/title"/>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textSize="24sp"
+                android:padding="5dp"
+                android:id="@+id/indicator_description_visibility"
+                android:layout_centerVertical="true"
+                android:text="{fa-caret-down}"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textSize="18sp"
-            android:id="@+id/title"/>
+            android:orientation="horizontal">
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textSize="24sp"
-            android:padding="5dp"
-            android:id="@+id/indicator_description_visibility"
-            android:layout_centerVertical="true"
-            android:text="{fa-caret-down}"/>
-    </RelativeLayout>
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="{fa-eye}"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewCount"
+                android:padding="5dp"
+                />
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="{fa-eye}"/>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/like_button"
+                android:padding="5dp"
+                android:gravity="center"
+                android:text="{fa-thumbs-up}"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/likeCount"
+                android:padding="5dp"
+                />
+
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:gravity="center"
+                android:text="{fa-comment}"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/commentCount"
+                android:padding="5dp"
+                />
+
+        </LinearLayout>
+
+
+
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/viewCount"
-            android:padding="5dp"
+            android:id="@+id/description"
+            android:padding="10dp"
+            android:textSize="13sp"
+            android:visibility="gone"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#a1a1a1"
             />
 
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/like_button"
-            android:padding="5dp"
-            android:gravity="center"
-            android:text="{fa-thumbs-up}"
-            android:textSize="20sp"/>
-
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/likeCount"
-            android:padding="5dp"
-            />
+            android:text="Related Videos"
+            android:padding="5dp"/>
 
-
-        <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:gravity="center"
-            android:text="{fa-comment}"
-            android:textSize="20sp"/>
+            android:id="@+id/related_videos_list"></android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/commentCount"
-            android:padding="5dp"
-            />
+
+
+
+
+
+
 
     </LinearLayout>
 
-
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
-        android:padding="10dp"
-        android:textSize="13sp"
-        android:visibility="gone"/>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#a1a1a1"
-        />
-
-
-
-
-
-
-
-
-</LinearLayout>
+</ScrollView>

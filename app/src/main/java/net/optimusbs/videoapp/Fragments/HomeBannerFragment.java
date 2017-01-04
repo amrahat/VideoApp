@@ -31,6 +31,7 @@ public class HomeBannerFragment extends Fragment {
     //YouTubePlayerView/* playerView1,*/ ;
     YouTubeThumbnailView playerView1, playerView2, playerView3;
     ArrayList<String> videoIdList;
+    String tag;
 
     IconTextView loader1, loader2, loader3, play1, play2, play3;
     OnSwipe onSwipe;
@@ -61,6 +62,7 @@ public class HomeBannerFragment extends Fragment {
         Bundle bundle = getArguments();
 
         videoIdList = bundle.getStringArrayList("video_id_array");
+        tag = bundle.getString("tag");
         if (videoIdList != null) initializeVideos();
     }
 
@@ -139,6 +141,7 @@ public class HomeBannerFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), VideoPlayer.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("video_id", videoId);
+                bundle.putString("tag", tag);
 
                 intent.putExtra("bundle", bundle);
 

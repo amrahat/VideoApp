@@ -12,5 +12,13 @@
 
 
 
+    <color name="nav_drawer_icon_color">#000000</color>
+    <color name="nav_drawer_text_color">#000000</color>
+    <color name="top_bar_icon_color">#ffffff</color>
+
+
+
+
+
 
 </resources>

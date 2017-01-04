@@ -32,10 +32,12 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
 
     ArrayList<String> videoIds;
     Context context;
+    String tag;
 
-    public VideoListByTagAdapter(ArrayList<String> videoIds, Context context) {
+    public VideoListByTagAdapter(ArrayList<String> videoIds, Context context,String tag) {
         this.videoIds = videoIds;
         this.context = context;
+        this.tag = tag;
     }
 
     @Override
@@ -68,6 +70,7 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
                             Intent intent = new Intent(context, VideoPlayer.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("video", video);
+                            bundle.putString("tag",tag);
 
                             intent.putExtra("bundle", bundle);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -95,7 +98,12 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
             String title = snippetObject.getString("title");
             String description = snippetObject.getString("description");
             String viewCount = statisticsObject.getString("viewCount");
-            String likeCount = statisticsObject.getString("likeCount");
+            String likeCount;
+            if(statisticsObject.has("likeCount")){
+                likeCount = statisticsObject.getString("likeCount");
+            }else{
+                likeCount = "0";
+            }
             String commentCount = statisticsObject.getString("commentCount");
 
 

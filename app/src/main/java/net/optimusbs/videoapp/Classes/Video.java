@@ -1,5 +1,7 @@
 package net.optimusbs.videoapp.Classes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 /**
@@ -9,7 +11,10 @@ import java.io.Serializable;
 public class Video implements Serializable {
     String id,title,description,publishedAt,viewCount,likeCount,commentCount,thumbnail;
 
-    public Video(String id, String title, String description, String publishedAt, String viewCount, String likeCount, String commentCount,String thumbnail) {
+    public Video() {
+    }
+
+    public Video(String id, String title, String description, String publishedAt, String viewCount, String likeCount, String commentCount, String thumbnail) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -83,5 +88,24 @@ public class Video implements Serializable {
 
     public void setCommentCount(String commentCount) {
         this.commentCount = commentCount;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Video){
+            Video video = (Video) obj;
+            return this.getId().equals(video.getId());
+        }
+        return false;
+    }
+
+
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + (this.getId() != null  ? this.getId().hashCode() : 0);
+        return hash;
     }
 }

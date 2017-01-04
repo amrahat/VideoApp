@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="#046d9f"
+    android:orientation="horizontal"
+    android:weightSum="4"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/home"
+        android:layout_weight="1">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/recentArrow"
+            android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/icon_home"
+            android:textColor="@color/top_bar_icon_color"
+            android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/all_videos"
+        >
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/icon_youtube_play"
+            android:textColor="@color/top_bar_icon_color"
+            android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/my_videos"
+        android:layout_weight="1">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/icon_myvideos"
+            android:textColor="@color/top_bar_icon_color"
+            android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/notification"
+        android:layout_weight="1">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/icon_notification"
+            android:textColor="@color/top_bar_icon_color"
+            android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

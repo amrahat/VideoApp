@@ -14,6 +14,7 @@ public class Constants {
     //public static final String API_KEY = "AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM";
     //,
     static String firstPartUrl = "https://www.googleapis.com/youtube/v3/videos?id=";
+    public static String TOP_BAR_BACK_COLOR = "#044D70";
 
     public static String getDataUrl(String videoId){
         StringBuilder stringBuilder = new StringBuilder();
