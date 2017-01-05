@@ -2,6 +2,7 @@ package net.optimusbs.videoapp.UtilityClasses;
 
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import net.optimusbs.videoapp.R;
 
@@ -14,8 +15,8 @@ public class SetUpToolbar {
 
     public static Toolbar setup(String text, Activity activity){
         Toolbar toolbar = (android.support.v7.widget.Toolbar) activity.findViewById(R.id.tabanim_toolbar);
-        /*TextView titleTxt = (TextView) activity.findViewById(R.id.title);
-        titleTxt.setText(text);*/
+        TextView titleTxt = (TextView) activity.findViewById(R.id.title);
+        titleTxt.setText(text);
 
         toolbar.setTitle(text);
 

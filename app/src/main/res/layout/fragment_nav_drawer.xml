@@ -1,106 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/nav_drawer_menu_padding"
         android:background="@drawable/nav_drawer_menu_background"
-        android:id="@+id/home">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
         <com.joanzapata.iconify.widget.IconTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/icon_home"
-            android:textSize="@dimen/nav_drawer_menu_icon_size"
             android:textColor="@color/nav_drawer_icon_color"
-            />
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:text="Home"
             android:textColor="@color/nav_drawer_text_color"
-            android:text="Home"/>
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
 
+    <include layout="@layout/horizontal_bar" />
+
     <LinearLayout
+        android:id="@+id/all_videos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/nav_drawer_menu_padding"
         android:background="@drawable/nav_drawer_menu_background"
-        android:id="@+id/all_videos">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
         <com.joanzapata.iconify.widget.IconTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/icon_youtube_play"
-            android:textSize="@dimen/nav_drawer_menu_icon_size"
             android:textColor="@color/nav_drawer_icon_color"
-            />
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:text="All Videos"
             android:textColor="@color/nav_drawer_text_color"
-            android:text="All Videos"/>
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
+    <include layout="@layout/horizontal_bar" />
+
     <LinearLayout
+        android:id="@+id/tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/nav_drawer_menu_padding"
         android:background="@drawable/nav_drawer_menu_background"
-        android:id="@+id/tags">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
         <com.joanzapata.iconify.widget.IconTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/icon_tags"
-            android:textSize="@dimen/nav_drawer_menu_icon_size"
             android:textColor="@color/nav_drawer_icon_color"
-            />
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:text="Tags"
             android:textColor="@color/nav_drawer_text_color"
-            android:text="Tags"/>
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
+    <include layout="@layout/horizontal_bar" />
 
     <LinearLayout
+        android:id="@+id/saved_searches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="@dimen/nav_drawer_menu_padding"
         android:background="@drawable/nav_drawer_menu_background"
-        android:id="@+id/saved_searches">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
         <com.joanzapata.iconify.widget.IconTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/icon_search"
-            android:textSize="@dimen/nav_drawer_menu_icon_size"
             android:textColor="@color/nav_drawer_icon_color"
-            />
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:textSize="@dimen/nav_drawer_menu_text_size"
+            android:text="Saved Searches"
             android:textColor="@color/nav_drawer_text_color"
-            android:text="Saved Searches"/>
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
+    <include layout="@layout/horizontal_bar" />
 
 </LinearLayout>

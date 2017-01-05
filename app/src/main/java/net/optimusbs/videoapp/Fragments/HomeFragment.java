@@ -42,8 +42,8 @@ public class HomeFragment extends Fragment {
     IconTextView[] indicators;
     HomeBannerFragment.OnSwipe onSwipe;
     int indicatorSmallSize = 15,indicatorLargeSize = 20;
-    int indicatorSmallColor = Color.parseColor("#998685");
-    int indicatorLargeColor = Color.parseColor("#553297");
+    int indicatorSmallColor = Color.parseColor("#80cc06b2");
+    int indicatorLargeColor = Color.parseColor("#cc06b2");
     ArrayList<String> homeBannerTag;
 
 
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setBackGroundColor() {
-        getActivity().findViewById(R.id.home).setBackgroundColor(Color.parseColor(Constants.TOP_BAR_BACK_COLOR));
+        getActivity().findViewById(R.id.home).setBackgroundColor(indicatorLargeColor);
 
     }
 

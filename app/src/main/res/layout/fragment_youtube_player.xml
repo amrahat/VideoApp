@@ -41,6 +41,7 @@
                 android:text="{fa-caret-down}"/>
         </RelativeLayout>
 
+<!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,6 +94,80 @@
                 />
 
         </LinearLayout>
+-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:id="@+id/title"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/video_list_icon_color"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:paddingRight="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="{fa-eye}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/viewCount"
+                    android:paddingRight="5dp"
+                    />
+
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/like_button"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/video_list_icon_color"
+                    android:gravity="center"
+                    android:text="{fa-thumbs-up}"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/likeCount"
+                    android:paddingRight="5dp"
+                    />
+
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="5dp"
+                    android:gravity="center"
+                    android:text="{fa-comment}"
+                    android:textColor="@color/video_list_icon_color"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/commentCount"
+                    android:paddingRight="5dp"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
 
 
 
@@ -109,6 +184,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:paddingTop="5dp"
             android:background="#a1a1a1"
             />
 

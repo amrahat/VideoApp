@@ -9,7 +9,7 @@
         android:id="@+id/tabanim_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#097bb1"
+        android:background="@color/toolbar_color"
         app:contentInsetStart="16dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
@@ -17,11 +17,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+
+                android:id="@+id/title"/>
+
         </RelativeLayout>
 
 
 
 
+
     </android.support.v7.widget.Toolbar>
+<!--
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ff37e5"
+        ></View>
+-->
+
 </android.support.design.widget.AppBarLayout>
 
