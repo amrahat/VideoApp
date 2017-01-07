@@ -14,6 +14,7 @@ import net.optimusbs.videoapp.Classes.Tag;
 import net.optimusbs.videoapp.Fragments.Tags;
 import net.optimusbs.videoapp.Fragments.VideosUnderTag;
 import net.optimusbs.videoapp.R;
+import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;
 
 import java.util.ArrayList;
 
@@ -28,11 +29,13 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
     Activity activity;
     String tag;
     FragmentManager fragmentManager;
+    boolean fromSearch;
 
-    public TagRecyclerViewAdapter(ArrayList<Tag> tags, Activity activity, FragmentManager fragmentManager) {
+    public TagRecyclerViewAdapter(ArrayList<Tag> tags, Activity activity, FragmentManager fragmentManager,boolean fromSearch) {
         this.tags = tags;
         this.activity = activity;
         this.fragmentManager = fragmentManager;
+        this.fromSearch = fromSearch;
     }
 
     @Override
@@ -51,6 +54,9 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(fromSearch){
+                    SharedPreferenceClass.addToSavedSearch(tag.getTagName(),activity);
+                }
                 VideosUnderTag videosUnderTag = new VideosUnderTag();
                 Bundle bundle = new Bundle();
                 bundle.putString("tag_name", tag.getTagName());
@@ -59,6 +65,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
                 fragmentManager.
                         beginTransaction().
                         replace(R.id.container, videosUnderTag).
+                        addToBackStack("specific_tag").
                         commit();
             }
         });

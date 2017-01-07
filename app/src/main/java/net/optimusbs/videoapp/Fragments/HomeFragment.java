@@ -4,6 +4,7 @@ package net.optimusbs.videoapp.Fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,14 +42,14 @@ public class HomeFragment extends Fragment {
     int currentPostitionOfBanner = 0;
     IconTextView[] indicators;
     HomeBannerFragment.OnSwipe onSwipe;
-    int indicatorSmallSize = 15,indicatorLargeSize = 20;
-    int indicatorSmallColor = Color.parseColor("#80cc06b2");
-    int indicatorLargeColor = Color.parseColor("#cc06b2");
+    int indicatorSmallSize = 10,indicatorLargeSize = 13;
+    int indicatorSmallColor;
+    int indicatorLargeColor;
     ArrayList<String> homeBannerTag;
 
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference homeBannerRef, tagRef;
+    DatabaseReference homeBannerRef, tagRef,homeCategoryRef;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -61,6 +62,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
 
         initializeView(view);
+        indicatorSmallColor = ContextCompat.getColor(getContext(), R.color.topbar_color);
+        indicatorLargeColor = ContextCompat.getColor(getContext(), R.color.toolbar_color);
         setBackGroundColor();
         initializeOnSwipeInterface();
         initializeFireBaseDatabase();
@@ -139,12 +142,15 @@ public class HomeFragment extends Fragment {
         indicators[currentPostitionOfBanner].setTextColor(indicatorLargeColor);
     }
 
-    private void getVideosByTag(final String tag, final RecyclerView recyclerView) {
+    private void getVideosByTag(final String tag, final RecyclerView recyclerView, final int count) {
         tagRef.child(tag).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
-                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getActivity(),tag);
+
+                ArrayList<String> sizedVideoList = new ArrayList<String>(videoList.subList(0,count));
+
+                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(sizedVideoList, getActivity(),tag);
                 recyclerView.setAdapter(videoListByTagAdapter);
             }
             @Override
@@ -155,19 +161,40 @@ public class HomeFragment extends Fragment {
     }
 
     private void setOtherTagVideo() {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.home_special_video_container,null);
-        TextView tagTitle = (TextView) view.findViewById(R.id.tag_title);
-        RecyclerView videoListRecyclerView = (RecyclerView) view.findViewById(R.id.video_list);
-        //
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        videoListRecyclerView.setLayoutManager(mLayoutManager);
-        videoListRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        String tag = "marriage-ceremony";
-        tagTitle.setText(tag);
+        homeCategoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
 
-        getVideosByTag(tag,videoListRecyclerView);
-        container2.addView(view);
+                while (iterator.hasNext()){
+                    DataSnapshot snapshot = iterator.next();
+                    String tagName = snapshot.getKey();
+                    Long count = (Long) snapshot.getValue();
+
+                    View view = getActivity().getLayoutInflater().inflate(R.layout.home_special_video_container,null);
+                    TextView tagTitle = (TextView) view.findViewById(R.id.tag_title);
+                    RecyclerView videoListRecyclerView = (RecyclerView) view.findViewById(R.id.video_list);
+                    //
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                    videoListRecyclerView.setLayoutManager(mLayoutManager);
+                    videoListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+                  //  String tag = "marriage-ceremony";
+                    tagTitle.setText(tagName);
+
+                    getVideosByTag(tagName,videoListRecyclerView,Integer.parseInt(String.valueOf(count)));
+                    container2.addView(view);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
 
 
     }
@@ -176,6 +203,7 @@ public class HomeFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         homeBannerRef = firebaseDatabase.getReference(Constants.HOME_BANNER_REF);
         tagRef = firebaseDatabase.getReference(Constants.TAG_REF);
+        homeCategoryRef = firebaseDatabase.getReference(Constants.HOME_CAT_REF);
 
     }
 

@@ -5,24 +5,24 @@
     <color name="colorAccent">#FF4081</color>
 
 
-    <color name="toolbar_color">#6a025d</color>
-    <color name="topbar_color">#9d0089</color>
+    <color name="toolbar_color">#1d7d46</color>
+    <color name="topbar_color">#27ae61</color>
 
 
-    <color name="color_youtube_play">#9d0089</color>
+    <color name="color_youtube_play">#ffffff</color>
     <color name="color_youtube_loader">#ffffff</color>
     <color name="thumbnail_background_color">#000000</color>
     <color name="title_back_pressed">#a3a3a3</color>
 
 
 
-    <color name="nav_drawer_icon_color">#d5d5d5</color>
-    <color name="nav_drawer_text_color">#d5d5d5</color>
+    <color name="nav_drawer_icon_color">#aaa</color>
+    <color name="nav_drawer_text_color">#aaa</color>
     <color name="top_bar_icon_color">#ffffff</color>
 
 
 
-    <color name="video_list_icon_color">#80cc06b2</color>
+    <color name="video_list_icon_color">#a3a3a3</color>
 
 
 

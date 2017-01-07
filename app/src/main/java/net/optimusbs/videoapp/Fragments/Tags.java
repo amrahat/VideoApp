@@ -62,7 +62,7 @@ public class Tags extends Fragment {
                     tags.add(tag);
                 }
 
-                TagRecyclerViewAdapter tagRecyclerViewAdapter = new TagRecyclerViewAdapter(tags,getActivity(),getFragmentManager());
+                TagRecyclerViewAdapter tagRecyclerViewAdapter = new TagRecyclerViewAdapter(tags,getActivity(),getFragmentManager(),false);
                 tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
 
             }

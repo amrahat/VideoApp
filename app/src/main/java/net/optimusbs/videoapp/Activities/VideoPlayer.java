@@ -33,6 +33,7 @@ import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -111,6 +112,9 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
         if(tag!=null && !tag.isEmpty()){
             getRelatedVideosByTag(tag);
+        }else {
+            loadRelatedVideoFromYoutube(videoId);
+
         }
 
 
@@ -124,13 +128,46 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
                 videoList.remove(videoId);
               //  Log.d("videoremove", String.valueOf(videoList.contains(video)));
+                if(videoList.size()>0){
+                    Log.d("sizebooro","sizebooro");
+                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
 
-                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
+                    relatedVideosList.setAdapter(videoListByTagAdapter);
+                }else {
+                    Log.d("sizebooro","choto");
 
-                relatedVideosList.setAdapter(videoListByTagAdapter);
+                    loadRelatedVideoFromYoutube(videoId);
+                }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadRelatedVideoFromYoutube(String videoId) {
+        String relatedVideoUrl = Constants.getRelatedVideoUrl(videoId);
+        VolleyRequest.sendRequestGet(getApplicationContext(), relatedVideoUrl, new VolleyRequest.VolleyCallback() {
+            @Override
+            public void onSuccess(String result) {
+                ArrayList<String> videoList = new ArrayList<String>();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    JSONArray itemsArray = jsonObject.getJSONArray("items");
+                    for(int i = 0;i<itemsArray.length();i++){
+                        JSONObject item = itemsArray.getJSONObject(i);
+                        String videoId = item.getJSONObject("id").getString("videoId");
+                        videoList.add(videoId);
+                    }
+                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
+
+                    relatedVideosList.setAdapter(videoListByTagAdapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
         });

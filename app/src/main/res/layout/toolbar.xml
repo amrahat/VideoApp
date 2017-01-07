@@ -10,20 +10,60 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/toolbar_color"
-        app:contentInsetStart="16dp"
+        app:contentInsetStart="-5dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/title_layout"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textColor="#ffffff"
-
+                android:gravity="center"
                 android:id="@+id/title"/>
 
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="{fa-search}"
+                android:padding="10dp"
+                android:id="@+id/search_icon"
+                android:textSize="@dimen/mainactivity_top_bar_icon_size"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:textColor="#ffffff"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_layout"
+            android:gravity="center"
+            android:visibility="gone">
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="{fa-angle-left}"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:visibility="gone"
+                android:textColor="#ffffff"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/back_button"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/search_edittext"
+                android:layout_toRightOf="@id/back_button"
+                android:textColorHint="#ffffff"
+                android:textColor="#ffffff"
+                android:hint="Search for videos,tags"/>
         </RelativeLayout>
 
 

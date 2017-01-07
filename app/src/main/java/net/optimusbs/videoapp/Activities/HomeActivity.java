@@ -78,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setUpToolbarAndDrawer() {
         toolbar = SetUpToolbar.setup("Home", this);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 

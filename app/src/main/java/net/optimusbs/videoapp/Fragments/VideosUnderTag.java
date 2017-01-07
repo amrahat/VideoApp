@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,7 @@ public class VideosUnderTag extends Fragment {
 
     private void getArgumentData() {
         tagName = getArguments().getString("tag_name");
+        SetUpToolbar.setTitle(tagName,getActivity());
         getVideosByTag(tagName,videoListUnderTag);
     }
 
@@ -48,6 +50,9 @@ public class VideosUnderTag extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         videoListUnderTag.setLayoutManager(mLayoutManager);
         videoListUnderTag.setItemAnimator(new DefaultItemAnimator());
+
+        getActivity().findViewById(R.id.search_edittext).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.title_layout).setVisibility(View.VISIBLE);
     }
 
     private void getVideosByTag(final String tag, final RecyclerView recyclerView) {

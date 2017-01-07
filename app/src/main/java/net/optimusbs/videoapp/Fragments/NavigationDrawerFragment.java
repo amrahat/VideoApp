@@ -16,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.joanzapata.iconify.widget.IconTextView;
+
 import net.optimusbs.videoapp.Activities.Activity2;
+import net.optimusbs.videoapp.Activities.HomeActivity;
 import net.optimusbs.videoapp.R;
 
 /**
@@ -28,7 +31,9 @@ public class NavigationDrawerFragment extends Fragment {
     private View containerView;
     ActionBarDrawerToggle drawerToggle;
 
-    LinearLayout tagLayout;
+    LinearLayout tagLayout,homeLayout,savedSearchLayout;
+
+    IconTextView searchIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,20 +69,58 @@ public class NavigationDrawerFragment extends Fragment {
                     startActivity(intent);
                 }
 
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
 
-                //if(activityName.equals(() ge))
-                /*getFragmentManager().
-                        beginTransaction().
-                        setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
-                        replace(R.id.main_container, new Tags()).
-                        commit();
-                mDrawerLayout.closeDrawer(Gravity.LEFT);*/
             }
         });
+
+        homeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),HomeActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+
+
+            }
+        });
+
+        savedSearchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String activityName = getActivity().getLocalClassName();
+                String activity2Name = "Activities.Activity2";
+                if(activityName.equals(activity2Name)){
+                    getFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                            replace(R.id.container, new SavedSearch()).
+                            commit();
+                }else {
+                    Intent intent = new Intent(getActivity(),Activity2.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fragment_name","saved_search");
+                    intent.putExtra("bundle",bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+
+
+
     }
 
     private void initView(View view) {
+
         tagLayout = (LinearLayout) view.findViewById(R.id.tags);
+        homeLayout = (LinearLayout) view.findViewById(R.id.home);
+        savedSearchLayout = (LinearLayout) view.findViewById(R.id.saved_searches);
     }
 
     public void setUp(int fragmentId, final DrawerLayout layout, Toolbar toolbar) {
@@ -97,6 +140,8 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
             }
         };
+
+
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -106,6 +151,40 @@ public class NavigationDrawerFragment extends Fragment {
 
         mDrawerLayout.addDrawerListener(drawerToggle);
 
+        searchIcon = (IconTextView) getActivity().findViewById(R.id.search_icon);
+
+        searchIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String activityName = getActivity().getLocalClassName();
+                String activity2Name = "Activities.Activity2";
+                if(activityName.equals(activity2Name)){
+                    getFragmentManager().
+                            beginTransaction().
+                            setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                            replace(R.id.container, new Search()).
+                            commit();
+                }else {
+                    Intent intent = new Intent(getActivity(),Activity2.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fragment_name","search");
+                    intent.putExtra("bundle",bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+
+    }
+
+    public void hideHamburgerIcon(){
+        drawerToggle.setDrawerIndicatorEnabled(false);
+    }
+    public void showHamburgetIcon(){
+        drawerToggle.setDrawerIndicatorEnabled(true);
 
     }
 }
