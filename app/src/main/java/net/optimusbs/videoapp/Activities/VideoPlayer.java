@@ -1,5 +1,6 @@
 package net.optimusbs.videoapp.Activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -46,7 +49,7 @@ import butterknife.InjectView;
  * Created by Santo on 1/2/2017.
  */
 
-public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener,View.OnClickListener {
     @InjectView(R.id.title)
     TextView title;
 
@@ -72,6 +75,12 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     @InjectView(R.id.related_videos_list)
     RecyclerView relatedVideosList;
 
+    @InjectView(R.id.like) TextView like;
+    @InjectView(R.id.comment) TextView comment;
+    @InjectView(R.id.share) TextView share;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference userDb;
 
     String videoId;
     Video video;
@@ -84,14 +93,22 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.fragment_youtube_player);
         ButterKnife.inject(this);
+        initializeFireBase();
         YouTubePlayerView playerView = (YouTubePlayerView) findViewById(R.id.player);
         playerView.initialize(Constants.API_KEY, this);
         initializeRecyclerView();
         getIntentData();
 
+        like.setOnClickListener(this);
+        comment.setOnClickListener(this);
+        share.setOnClickListener(this);
+
 
     }
-
+    private void initializeFireBase() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userDb = firebaseDatabase.getReference(Constants.USERDB);
+    }
     private void initializeRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         relatedVideosList.setLayoutManager(mLayoutManager);
@@ -179,7 +196,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         VolleyRequest.sendRequestGet(this, url, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
-                Log.d("result", result);
+                //Log.d("result", result);
                 parseJson(result);
             }
         });
@@ -254,4 +271,29 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.like:
+                doLike();
+                break;
+            case R.id.share:
+                break;
+            case R.id.comment:
+                break;
+        }
+
+    }
+
+    private void doLike() {
+        if(AccessToken.getCurrentAccessToken()!=null){
+            Profile profile = Profile.getCurrentProfile();
+            String id = profile.getId();
+
+            userDb.child(id).child(Constants.LIKED).child(videoId).setValue(1);
+
+            like.setTextColor(Color.BLUE);
+
+        }
+    }
 }

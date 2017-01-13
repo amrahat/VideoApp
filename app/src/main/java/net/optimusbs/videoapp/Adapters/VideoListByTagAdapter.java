@@ -55,7 +55,7 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
         VolleyRequest.sendRequestGet(context, url, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
-                Log.d("result", result);
+                //Log.d("result", result);
                 final Video video = parseJson(result);
                 if(video!=null){
                     holder.title.setText(video.getTitle());

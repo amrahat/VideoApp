@@ -1,19 +1,21 @@
 package net.optimusbs.videoapp.Fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,14 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.Classes.GetHashCode;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import butterknife.InjectView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,14 +44,14 @@ public class HomeFragment extends Fragment {
     int currentPostitionOfBanner = 0;
     IconTextView[] indicators;
     HomeBannerFragment.OnSwipe onSwipe;
-    int indicatorSmallSize = 10,indicatorLargeSize = 13;
+    int indicatorSmallSize = 10, indicatorLargeSize = 13;
     int indicatorSmallColor;
     int indicatorLargeColor;
     ArrayList<String> homeBannerTag;
 
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference homeBannerRef, tagRef,homeCategoryRef;
+    DatabaseReference homeBannerRef, tagRef, homeCategoryRef;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,6 +64,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
 
         initializeView(view);
+        getLoggedInStatus();
         indicatorSmallColor = ContextCompat.getColor(getContext(), R.color.topbar_color);
         indicatorLargeColor = ContextCompat.getColor(getContext(), R.color.toolbar_color);
         setBackGroundColor();
@@ -70,9 +73,20 @@ public class HomeFragment extends Fragment {
         setSwipeGestureOnBannerContainer();
         getHomeBannerData();
         setOtherTagVideo();
-
+        GetHashCode.printHashCode(getContext());
         return view;
     }
+
+    private void getLoggedInStatus() {
+        if(AccessToken.getCurrentAccessToken()!=null && !AccessToken.getCurrentAccessToken().isExpired()){
+            String propicUrl = Profile.getCurrentProfile().getProfilePictureUri(500,500).toString();
+        }
+        else {
+            Log.d("nai","nai");
+        }
+
+    }
+
 
     private void setBackGroundColor() {
         getActivity().findViewById(R.id.home).setBackgroundColor(indicatorLargeColor);
@@ -99,23 +113,24 @@ public class HomeFragment extends Fragment {
             }
         };
     }
-    public void doSwipeLeftOp(){
+
+    public void doSwipeLeftOp() {
         if (currentPostitionOfBanner != homeBannerTag.size() - 1) {
             int prevPos = currentPostitionOfBanner;
             currentPostitionOfBanner++;
             String tagName = homeBannerTag.get(currentPostitionOfBanner);
-            getVideosByTag(tagName,false);
-            changeIndicatorSizeAndColor(prevPos,currentPostitionOfBanner);
+            getVideosByTag(tagName, false);
+            changeIndicatorSizeAndColor(prevPos, currentPostitionOfBanner);
         }
     }
 
-    public void doSwipeRightOp(){
+    public void doSwipeRightOp() {
         if (currentPostitionOfBanner != 0) {
             int prevPos = currentPostitionOfBanner;
             currentPostitionOfBanner--;
             String tagName = homeBannerTag.get(currentPostitionOfBanner);
-            getVideosByTag(tagName,true);
-            changeIndicatorSizeAndColor(prevPos,currentPostitionOfBanner);
+            getVideosByTag(tagName, true);
+            changeIndicatorSizeAndColor(prevPos, currentPostitionOfBanner);
 
         }
     }
@@ -126,8 +141,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
-                populateHomeBanner(videoList,leftToRight,firstTag);
+                populateHomeBanner(videoList, leftToRight, firstTag);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -148,11 +164,12 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
 
-                ArrayList<String> sizedVideoList = new ArrayList<String>(videoList.subList(0,count));
+                ArrayList<String> sizedVideoList = new ArrayList<String>(videoList.subList(0, count));
 
-                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(sizedVideoList, getActivity(),tag);
+                VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(sizedVideoList, getActivity(), tag);
                 recyclerView.setAdapter(videoListByTagAdapter);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -167,12 +184,12 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
 
-                while (iterator.hasNext()){
+                while (iterator.hasNext()) {
                     DataSnapshot snapshot = iterator.next();
                     String tagName = snapshot.getKey();
                     Long count = (Long) snapshot.getValue();
 
-                    View view = getActivity().getLayoutInflater().inflate(R.layout.home_special_video_container,null);
+                    View view = getActivity().getLayoutInflater().inflate(R.layout.home_special_video_container, null);
                     TextView tagTitle = (TextView) view.findViewById(R.id.tag_title);
                     RecyclerView videoListRecyclerView = (RecyclerView) view.findViewById(R.id.video_list);
                     //
@@ -180,10 +197,10 @@ public class HomeFragment extends Fragment {
                     videoListRecyclerView.setLayoutManager(mLayoutManager);
                     videoListRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                  //  String tag = "marriage-ceremony";
+                    //  String tag = "marriage-ceremony";
                     tagTitle.setText(tagName);
 
-                    getVideosByTag(tagName,videoListRecyclerView,Integer.parseInt(String.valueOf(count)));
+                    getVideosByTag(tagName, videoListRecyclerView, Integer.parseInt(String.valueOf(count)));
                     container2.addView(view);
                 }
             }
@@ -193,8 +210,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-
 
 
     }
@@ -239,12 +254,11 @@ public class HomeFragment extends Fragment {
                     homeBannerTag.add(tagName);
                 }
 
-                if(homeBannerTag.size()!=0){
+                if (homeBannerTag.size() != 0) {
                     String firstTag = homeBannerTag.get(0);
                     setIndicator(homeBannerTag.size());
-                    getVideosByTag(firstTag,true);
+                    getVideosByTag(firstTag, true);
                 }
-
 
 
             }
@@ -259,12 +273,12 @@ public class HomeFragment extends Fragment {
     private void setIndicator(int size) {
         indicators = new IconTextView[size];
         int padding = 5;
-        for(int i = 0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             IconTextView iconTextView = new IconTextView(getActivity());
             iconTextView.setText("{fa-circle}");
             iconTextView.setTextSize(indicatorSmallSize);
             iconTextView.setTextColor(indicatorSmallColor);
-            iconTextView.setPadding(padding,padding,padding,padding);
+            iconTextView.setPadding(padding, padding, padding, padding);
             indicators[i] = iconTextView;
             indicatorLayout.addView(iconTextView);
         }
@@ -273,36 +287,41 @@ public class HomeFragment extends Fragment {
         indicators[0].setTextColor(indicatorLargeColor);
     }
 
-    private void populateHomeBanner(ArrayList<String> videoId,boolean leftToRight,String tag) {
-        HomeBannerFragment homeBannerFragment = new HomeBannerFragment(onSwipe);
+    private void populateHomeBanner(ArrayList<String> videoId, final boolean leftToRight, String tag) {
+        final HomeBannerFragment homeBannerFragment = new HomeBannerFragment(onSwipe);
+
+    //    WeakReference<HomeBannerFragment> homeBannerFragment = new WeakReference<>(new HomeBannerFragment(onSwipe));
         Bundle bundle = new Bundle();
         // String[] videoIdArray = {"FNb1iB3VqEc","Qro_C8B-zxA","XuEEwRvuu0A"};
 
         bundle.putStringArrayList("video_id_array", videoId);
-        bundle.putString("tag",tag);
+        bundle.putString("tag", tag);
 
         homeBannerFragment.setArguments(bundle);
 
 
         //getFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).replace(R.id.banner_container, homeBannerFragment).addToBackStack("recent").commit();
-        if(leftToRight){
+
+
+        if (leftToRight) {
             getFragmentManager().
                     beginTransaction().
-                    setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                    setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
                     replace(R.id.banner_container, homeBannerFragment).
-                    commit();
+                    commitAllowingStateLoss();
 
-        }else {
+        } else {
             getFragmentManager()
                     .beginTransaction().
-                    setCustomAnimations(R.anim.enter_from_right,R.anim.exit_to_left).
+                    setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left).
                     replace(R.id.banner_container, homeBannerFragment).
-                    commit();
+                    commitAllowingStateLoss();
+
 
         }
-
-
-
     }
 
+
 }
+
+

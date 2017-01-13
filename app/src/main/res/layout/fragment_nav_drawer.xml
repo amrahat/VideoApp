@@ -4,6 +4,36 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical">
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/userLayout"
+        android:padding="@dimen/nav_drawer_menu_padding"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/user_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:id="@+id/user_name"
+            android:gravity="center"
+            android:textColor="@color/nav_drawer_text_color"
+
+            />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/home"
@@ -109,5 +139,31 @@
             android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
     <include layout="@layout/horizontal_bar" />
+
+    <LinearLayout
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/nav_drawer_menu_background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_search"
+            android:textColor="@color/nav_drawer_icon_color"
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:text="Log In"
+            android:id="@+id/login_text"
+            android:textColor="@color/nav_drawer_text_color"
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
+    </LinearLayout>
 
 </LinearLayout>

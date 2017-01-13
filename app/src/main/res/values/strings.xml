@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VideoApp</string>
+    <string name="app_name">Beautify</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -17,6 +17,7 @@
     <string name="icon_myvideos">{fa-play-circle}</string>
     <string name="icon_tags">{fa-tags}</string>
     <string name="icon_search">{fa-search}</string>
+    <string name="facebook_app_id">703478709811393</string>
 
-
+    <string name="fb_login_protocol_scheme">fb703478709811393</string>
 </resources>

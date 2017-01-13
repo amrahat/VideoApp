@@ -13,6 +13,7 @@
     <color name="color_youtube_loader">#ffffff</color>
     <color name="thumbnail_background_color">#000000</color>
     <color name="title_back_pressed">#a3a3a3</color>
+    <color name="video_player_bottom_test_back_pressed">#a3a3a3</color>
 
 
 

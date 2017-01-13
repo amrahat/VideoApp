@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.joanzapata.iconify.widget.IconTextView;
 
+import net.optimusbs.videoapp.Fragments.Login;
 import net.optimusbs.videoapp.Fragments.NavigationDrawerFragment;
 import net.optimusbs.videoapp.Fragments.SavedSearch;
 import net.optimusbs.videoapp.Fragments.Search;
@@ -88,6 +89,17 @@ public class Activity2 extends AppCompatActivity {
                 //SetUpToolbar.setTitle("Search",this);
                 hideSearchEditText();
                 break;
+
+            case "login":
+                getSupportFragmentManager().
+                        beginTransaction().
+                        setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                        replace(R.id.container, new Login()).
+                        addToBackStack("search").
+                        commit();
+                //SetUpToolbar.setTitle("Search",this);
+                hideSearchEditText();
+                break;
         }
     }
 
@@ -120,5 +132,13 @@ public class Activity2 extends AppCompatActivity {
         drawerFragment =
                 (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, toolbar);
+    }
+
+    public void showUserLayout(){
+        drawerFragment.setOnLoggedIn();
+    }
+
+    public void hideUserLayout(){
+        drawerFragment.setOnLoggedOut();
     }
 }

@@ -11,6 +11,8 @@ public class Constants {
     public static final String HOME_BANNER_REF = "home-banners";
     public static final String TAG_REF = "tags";
     public static final String API_KEY = "AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM";
+    public static final String USERDB = "users";
+    public static final String LIKED = "liked_videos" ;
     public static String HOME_CAT_REF = "home-categories";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +
