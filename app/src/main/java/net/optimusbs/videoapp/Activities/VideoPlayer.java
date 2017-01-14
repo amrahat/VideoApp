@@ -85,6 +85,10 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     String videoId;
     Video video;
 
+    boolean isLikedByCurrentUser = false;
+    boolean isUserLoggedIn;
+    String loggedInUserId;
+
     boolean description_layout_visible = false;
     String tag;
     @Override
@@ -99,12 +103,43 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         initializeRecyclerView();
         getIntentData();
 
+        if(AccessToken.getCurrentAccessToken()!=null){
+            isUserLoggedIn = true;
+            loggedInUserId = Profile.getCurrentProfile().getId();
+            setIsLikedByCurrentUser();
+
+        }else {
+            isUserLoggedIn = false;
+        }
+
+
         like.setOnClickListener(this);
         comment.setOnClickListener(this);
         share.setOnClickListener(this);
 
 
     }
+
+    private void setIsLikedByCurrentUser() {
+        userDb.child(loggedInUserId).child(Constants.LIKED).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                isLikedByCurrentUser = dataSnapshot.hasChild(videoId);
+                if(isLikedByCurrentUser){
+                    like.setTextColor(Color.BLUE);
+                }else {
+                    like.setTextColor(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void initializeFireBase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         userDb = firebaseDatabase.getReference(Constants.USERDB);
@@ -286,14 +321,20 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     }
 
     private void doLike() {
-        if(AccessToken.getCurrentAccessToken()!=null){
-            Profile profile = Profile.getCurrentProfile();
-            String id = profile.getId();
+        if(isUserLoggedIn){
+            if(isLikedByCurrentUser){
+                userDb.child(loggedInUserId).child(Constants.LIKED).child(videoId).removeValue();
 
-            userDb.child(id).child(Constants.LIKED).child(videoId).setValue(1);
+                like.setTextColor(Color.BLACK);
+            }else {
+                userDb.child(loggedInUserId).child(Constants.LIKED).child(videoId).setValue(1);
 
-            like.setTextColor(Color.BLUE);
-
+                like.setTextColor(Color.BLUE);
+            }
+        }else {
+            //dologin
         }
+
+
     }
 }
