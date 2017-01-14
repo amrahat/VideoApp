@@ -27,7 +27,9 @@ import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.Classes.GetHashCode;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;
+import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class HomeFragment extends Fragment {
     LinearLayout indicatorLayout;
     LinearLayout container2;
     TextView tagName;
+    FireBaseClass fireBaseClass;
     int currentPostitionOfBanner = 0;
     IconTextView[] indicators;
     HomeBannerFragment.OnSwipe onSwipe;
@@ -62,7 +65,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
-
+        fireBaseClass = new FireBaseClass(getContext());
         initializeView(view);
         getLoggedInStatus();
         indicatorSmallColor = ContextCompat.getColor(getContext(), R.color.topbar_color);
@@ -74,6 +77,8 @@ public class HomeFragment extends Fragment {
         getHomeBannerData();
         setOtherTagVideo();
         GetHashCode.printHashCode(getContext());
+
+        SetUpToolbar.setTitle("Home",getActivity());
         return view;
     }
 
@@ -89,6 +94,9 @@ public class HomeFragment extends Fragment {
 
 
     private void setBackGroundColor() {
+        getActivity().findViewById(R.id.my_videos).setBackgroundColor(indicatorSmallColor);
+        getActivity().findViewById(R.id.all_videos).setBackgroundColor(indicatorSmallColor);
+        getActivity().findViewById(R.id.notification).setBackgroundColor(indicatorSmallColor);
         getActivity().findViewById(R.id.home).setBackgroundColor(indicatorLargeColor);
 
     }

@@ -91,6 +91,7 @@ public class Login extends Fragment implements FacebookCallback<LoginResult> {
     public void onSuccess(LoginResult loginResult) {
         Profile profile = Profile.getCurrentProfile();
       //  User user = new User(profile.getId(),profile.getName(),profile.getProfilePictureUri(500,500).toString());
+        Log.d("idaslkdfjal",profile.getFirstName());
         userDb.child(profile.getId()).child(Constants.USER_IMAGE).setValue(profile.getProfilePictureUri(500,500).toString());
         userDb.child(profile.getId()).child(Constants.USER_NAME).setValue(profile.getName());
 

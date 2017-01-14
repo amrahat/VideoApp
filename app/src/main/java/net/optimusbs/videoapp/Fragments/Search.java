@@ -59,10 +59,16 @@ public class Search extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
+        showSearchEditText();
         initializeView(view);
         initializeFirebase();
 
         return view;
+    }
+
+    private void showSearchEditText() {
+        getActivity().findViewById(R.id.search_layout).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.title_layout).setVisibility(View.GONE);
     }
 
     private void initializeFirebase() {

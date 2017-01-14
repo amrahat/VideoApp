@@ -12,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:id="@+id/home"
+        android:background="@drawable/home_top_bar_menu_back"
         android:layout_weight="1">
 
         <com.joanzapata.iconify.widget.IconTextView
@@ -30,6 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@drawable/home_top_bar_menu_back"
         android:id="@+id/all_videos"
         >
 
@@ -48,17 +50,30 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@drawable/home_top_bar_menu_back"
         android:id="@+id/my_videos"
         android:layout_weight="1">
-
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="{fa-user}"
+            android:layout_marginLeft="-15dp"
+            android:layout_marginBottom="-5dp"
+            android:id="@+id/my_videos_user_icon"
+            android:textColor="@color/top_bar_icon_color"
+            android:textSize="13sp" />
         <com.joanzapata.iconify.widget.IconTextView
             android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
             android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
             android:layout_centerInParent="true"
+            android:id="@+id/my_videos_icon"
             android:gravity="center"
+            android:layout_toLeftOf="@id/my_videos_user_icon"
             android:text="@string/icon_myvideos"
             android:textColor="@color/top_bar_icon_color"
             android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+
 
 
     </RelativeLayout>
@@ -67,6 +82,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:id="@+id/notification"
+        android:background="@drawable/home_top_bar_menu_back"
         android:layout_weight="1">
 
         <com.joanzapata.iconify.widget.IconTextView

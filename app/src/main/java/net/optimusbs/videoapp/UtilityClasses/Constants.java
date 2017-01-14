@@ -10,12 +10,19 @@ import java.net.URLEncoder;
 public class Constants {
     public static final String HOME_BANNER_REF = "home-banners";
     public static final String TAG_REF = "tags";
+    public static final String VIDEO_REF = "videos";
     public static final String API_KEY = "AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM";
-    public static final String USERDB = "users";
+    public static final String USERDB = "users_db";
     public static final String LIKED = "liked_videos" ;
+    public static final String FAVOURITE = "favorite_videos" ;
+    public static final String USER_WHO_LIKED = "liked_users" ;
+    public static final String USER_WHO_FAVOURITE = "favourite_users" ;
     public static final String USER_NAME = "name" ;
     public static final String USER_IMAGE = "image" ;
     public static String HOME_CAT_REF = "home-categories";
+    public static String VIDEO_TITLE = "title";
+    public static String VIDEO_THUMBNAIL = "thumbnail";
+    public static String VIDEO_DESCRIPTION = "description";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +
             "&part=contentDetails,snippet,,statistics,status";

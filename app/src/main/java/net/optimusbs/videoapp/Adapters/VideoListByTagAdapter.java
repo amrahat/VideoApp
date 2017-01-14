@@ -17,6 +17,7 @@ import net.optimusbs.videoapp.Activities.VideoPlayer;
 import net.optimusbs.videoapp.Classes.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 
 import org.json.JSONException;
@@ -33,11 +34,13 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
     ArrayList<String> videoIds;
     Context context;
     String tag;
+    FireBaseClass fireBaseClass;
 
     public VideoListByTagAdapter(ArrayList<String> videoIds, Context context,String tag) {
         this.videoIds = videoIds;
         this.context = context;
         this.tag = tag;
+        fireBaseClass = new FireBaseClass(context);
     }
 
     @Override
@@ -77,6 +80,11 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
                             context.startActivity(intent);
                         }
                     });
+
+                    fireBaseClass.addVideoToDatabase(videoId,Constants.VIDEO_TITLE,video.getTitle());
+                    fireBaseClass.addVideoToDatabase(videoId,Constants.VIDEO_THUMBNAIL,video.getThumbnail());
+                    fireBaseClass.addVideoToDatabase(videoId,Constants.VIDEO_DESCRIPTION,video.getDescription());
+
                 }
             }
         });

@@ -1,6 +1,7 @@
 package net.optimusbs.videoapp.UtilityClasses;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +25,7 @@ import java.util.Iterator;
 
 public class FireBaseClass {
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference homeBannerRef, tagRef;
+    private DatabaseReference homeBannerRef, tagRef,videoRef;
     private String baseUrl = "https://videoapp-32254.firebaseio.com/";
     Context context;
     Gson gson;
@@ -32,44 +33,17 @@ public class FireBaseClass {
         firebaseDatabase = FirebaseDatabase.getInstance();
         homeBannerRef = firebaseDatabase.getReference(Constants.HOME_BANNER_REF);
         tagRef = firebaseDatabase.getReference(Constants.TAG_REF);
+        videoRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
         this.context = context;
         gson = new Gson();
 
     }
-    private void getVideoByTag(String tag, final ArrayList<String> videoIdList){
-       /* String url = baseUrl+"tags/"+tag;
 
+    public void addVideoToDatabase(String videoId){
+       // videoRef.child(videoId)
+    }
 
-        VolleyRequest.sendRequestGet(context, url, new VolleyRequest.VolleyCallback() {
-            @Override
-            public void onSuccess(String result) {
-                if(result!=null && !result.equals("null")){
-                    Type type = new TypeToken<ArrayList<String>>(){}.getType();
-                    videoIdList = gson.fromJson(result,type)
-                }
-            }
-        });*/
-     //   final ArrayList<String> videoIdList = new ArrayList<>();
-
-        /*tagRef.child(tag).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                while (iterator.hasNext()) {
-                    DataSnapshot snapshot = iterator.next();
-                    String videoId = snapshot.getKey();
-                    videoIdList.add(videoId);
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
-
+    public void addVideoToDatabase(String videoId, String key,String value){
+        videoRef.child(videoId).child(key).setValue(value);
     }
 }

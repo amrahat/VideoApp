@@ -44,7 +44,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     private View containerView;
     ActionBarDrawerToggle drawerToggle;
 
-    LinearLayout tagLayout, homeLayout, savedSearchLayout, logInLayout, userLayout;
+    LinearLayout tagLayout, homeLayout, savedSearchLayout, logInLayout, userLayout,allVideosLayout;
 
     TextView userName, loginText;
 
@@ -60,12 +60,16 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     DatabaseReference userDb;
     AccessTokenTracker accessTokenTracker;
 
+    String login,logout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_nav_drawer, container, false);
 
+        login = getContext().getResources().getString(R.string.login_facebook);
+        logout = getContext().getResources().getString(R.string.logout_facebook);
         initView(view);
         setOnClickListeners();
 
@@ -111,6 +115,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
 
             }
         });
+
+
 
         savedSearchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +168,36 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
             }
         });
 
+        userLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+
+        allVideosLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String activityName = getActivity().getLocalClassName();
+                String activity2Name = "Activities.HomeActivity";
+                if (activityName.equals(activity2Name)) {
+                    getFragmentManager().
+                            beginTransaction().
+                            //setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
+                                    replace(R.id.container, new AllVideos()).
+                            commit();
+                } else {
+                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    intent.putExtra("fragment_name", "all_videos");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
 
     }
 
@@ -172,6 +208,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
         savedSearchLayout = (LinearLayout) view.findViewById(R.id.saved_searches);
         logInLayout = (LinearLayout) view.findViewById(R.id.login);
         userLayout = (LinearLayout) view.findViewById(R.id.userLayout);
+        allVideosLayout = (LinearLayout) view.findViewById(R.id.all_videos);
         userName = (TextView) view.findViewById(R.id.user_name);
         loginText = (TextView) view.findViewById(R.id.login_text);
         userImage = (CircleImageView) view.findViewById(R.id.user_image);
@@ -245,16 +282,16 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
         if (AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()) {
             setOnLoggedIn();
         } else {
-            userLayout.setVisibility(View.GONE);
-            loginText.setText("Log In");
+           // userLayout.setVisibility(View.GONE);
+            setOnLoggedOut();
         }
 
     }
 
     public void setOnLoggedIn() {
-        loginText.setText("Log Out");
+        loginText.setText(logout);
 
-        userLayout.setVisibility(View.VISIBLE);
+        //userLayout.setVisibility(View.VISIBLE);
         Profile profile = Profile.getCurrentProfile();
 
         if (profile != null) {
@@ -269,8 +306,11 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     }
 
     public void setOnLoggedOut() {
-        userLayout.setVisibility(View.GONE);
-        loginText.setText("Log In");
+        //userLayout.setVisibility(View.GONE);
+        userName.setText(login);
+        loginText.setText(login);
+
+        userImage.setImageResource(R.drawable.user_placeholder);
 
     }
 
@@ -316,8 +356,10 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     @Override
     public void onSuccess(LoginResult loginResult) {
         Profile profile = Profile.getCurrentProfile();
-        User user = new User(profile.getId(),profile.getName(),profile.getProfilePictureUri(500,500).toString());
-        userDb.child(profile.getId()).setValue(user);
+        //  User user = new User(profile.getId(),profile.getName(),profile.getProfilePictureUri(500,500).toString());
+        Log.d("idaslkdfjal",profile.getFirstName());
+        userDb.child(profile.getId()).child(Constants.USER_IMAGE).setValue(profile.getProfilePictureUri(500,500).toString());
+        userDb.child(profile.getId()).child(Constants.USER_NAME).setValue(profile.getName());
 
 
 

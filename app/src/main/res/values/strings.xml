@@ -17,7 +17,15 @@
     <string name="icon_myvideos">{fa-play-circle}</string>
     <string name="icon_tags">{fa-tags}</string>
     <string name="icon_search">{fa-search}</string>
+    <string name="icon_sign_in">{fa-sign-in}</string>
+    <string name="icon_like">{fa-thumbs-up}</string>
+    <string name="icon_comments">{fa-comments}</string>
+    <string name="icon_share">{fa-share-alt}</string>
+    <string name="icon_favourite_empty">{fa-star-o}</string>
+    <string name="icon_favourite_full">{fa-star}</string>
     <string name="facebook_app_id">703478709811393</string>
 
     <string name="fb_login_protocol_scheme">fb703478709811393</string>
+    <string name="login_facebook">Log in with Facebook</string>
+    <string name="logout_facebook">Log Out</string>
 </resources>

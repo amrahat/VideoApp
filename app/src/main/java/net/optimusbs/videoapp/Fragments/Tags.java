@@ -20,6 +20,7 @@ import net.optimusbs.videoapp.Adapters.TagRecyclerViewAdapter;
 import net.optimusbs.videoapp.Classes.Tag;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,6 +42,8 @@ public class Tags extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
+        SetUpToolbar.setTitle("Tags",getActivity());
+        hideSearchEditText();
         initializeViews(view);
         findTags();
         return view;
@@ -73,7 +76,10 @@ public class Tags extends Fragment {
             }
         });
     }
-
+    private void hideSearchEditText() {
+        getActivity().findViewById(R.id.search_layout).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.title_layout).setVisibility(View.VISIBLE);
+    }
     private void initializeViews(View view) {
         tagRecyclerView = (RecyclerView) view.findViewById(R.id.tagRecyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

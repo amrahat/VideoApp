@@ -1,9 +1,7 @@
 package net.optimusbs.videoapp.Activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.Profile;
@@ -25,7 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -34,6 +30,7 @@ import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.Classes.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 
 import org.json.JSONArray;
@@ -49,7 +46,7 @@ import butterknife.InjectView;
  * Created by Santo on 1/2/2017.
  */
 
-public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener,View.OnClickListener {
+public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener {
     @InjectView(R.id.title)
     TextView title;
 
@@ -75,27 +72,54 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     @InjectView(R.id.related_videos_list)
     RecyclerView relatedVideosList;
 
-    @InjectView(R.id.like) TextView like;
-    @InjectView(R.id.comment) TextView comment;
-    @InjectView(R.id.share) TextView share;
+    @InjectView(R.id.like)
+    IconTextView like;
+    @InjectView(R.id.comment)
+    IconTextView comment;
+    @InjectView(R.id.share)
+    IconTextView share;
+    @InjectView(R.id.favourite)
+    IconTextView favourite;
 
+    @InjectView(R.id.like_layout)
+    LinearLayout likeLayout;
+    @InjectView(R.id.comment_layout)
+    LinearLayout commentLayout;
+    @InjectView(R.id.share_layout)
+    LinearLayout shareLayout;
+    @InjectView(R.id.favourite_layout)
+    LinearLayout favouriteLayout;
+    FireBaseClass fireBaseClass;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference userDb;
+    DatabaseReference userDb, videoDb;
 
     String videoId;
     Video video;
 
     boolean isLikedByCurrentUser = false;
+    boolean isFavouriteByCurrentUser = false;
     boolean isUserLoggedIn;
     String loggedInUserId;
 
     boolean description_layout_visible = false;
     String tag;
+
+    String favouriteIcon,nonFavouriteIcon;
+
+    int iconNormalColor, iconSelectedColor;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.fragment_youtube_player);
+        fireBaseClass = new FireBaseClass(this);
+        iconNormalColor = ContextCompat.getColor(this, R.color.video_player_bottom_icon_color);
+        iconSelectedColor = ContextCompat.getColor(this, R.color.video_player_bottom_icon_selected_color);
+        favouriteIcon = getResources().getString(R.string.icon_favourite_full);
+        nonFavouriteIcon =  getResources().getString(R.string.icon_favourite_empty);
+
+
         ButterKnife.inject(this);
         initializeFireBase();
         YouTubePlayerView playerView = (YouTubePlayerView) findViewById(R.id.player);
@@ -103,21 +127,45 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         initializeRecyclerView();
         getIntentData();
 
-        if(AccessToken.getCurrentAccessToken()!=null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             isUserLoggedIn = true;
             loggedInUserId = Profile.getCurrentProfile().getId();
             setIsLikedByCurrentUser();
+            setIsFavouriteByCurrentUser();
 
-        }else {
+        } else {
             isUserLoggedIn = false;
         }
 
 
-        like.setOnClickListener(this);
-        comment.setOnClickListener(this);
-        share.setOnClickListener(this);
+        likeLayout.setOnClickListener(this);
+        commentLayout.setOnClickListener(this);
+        shareLayout.setOnClickListener(this);
+        favouriteLayout.setOnClickListener(this);
 
 
+    }
+
+    private void setIsFavouriteByCurrentUser() {
+        userDb.child(loggedInUserId).child(Constants.FAVOURITE).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                isFavouriteByCurrentUser = dataSnapshot.hasChild(videoId);
+                if (isFavouriteByCurrentUser) {
+                    favourite.setTextColor(iconSelectedColor);
+                    favourite.setText(favouriteIcon);
+                } else {
+                    favourite.setTextColor(iconNormalColor);
+                    favourite.setText(nonFavouriteIcon);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setIsLikedByCurrentUser() {
@@ -125,10 +173,10 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 isLikedByCurrentUser = dataSnapshot.hasChild(videoId);
-                if(isLikedByCurrentUser){
-                    like.setTextColor(Color.BLUE);
-                }else {
-                    like.setTextColor(Color.BLACK);
+                if (isLikedByCurrentUser) {
+                    like.setTextColor(iconSelectedColor);
+                } else {
+                    like.setTextColor(iconNormalColor);
                 }
             }
 
@@ -143,7 +191,9 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     private void initializeFireBase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         userDb = firebaseDatabase.getReference(Constants.USERDB);
+        videoDb = firebaseDatabase.getReference(Constants.VIDEO_REF);
     }
+
     private void initializeRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         relatedVideosList.setLayoutManager(mLayoutManager);
@@ -152,19 +202,19 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
     private void getIntentData() {
         Bundle bundle = getIntent().getBundleExtra("bundle");
-        if(bundle.containsKey("video_id")){
+        if (bundle.containsKey("video_id")) {
             videoId = getIntent().getBundleExtra("bundle").getString("video_id");
             getVideoData();
-        }else if(bundle.containsKey("video")){
+        } else if (bundle.containsKey("video")) {
             video = (Video) bundle.getSerializable("video");
             videoId = video.getId();
             setUpViews(video);
         }
         tag = bundle.getString("tag");
 
-        if(tag!=null && !tag.isEmpty()){
+        if (tag != null && !tag.isEmpty()) {
             getRelatedVideosByTag(tag);
-        }else {
+        } else {
             loadRelatedVideoFromYoutube(videoId);
 
         }
@@ -179,19 +229,20 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
                 videoList.remove(videoId);
-              //  Log.d("videoremove", String.valueOf(videoList.contains(video)));
-                if(videoList.size()>0){
-                    Log.d("sizebooro","sizebooro");
-                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
+                //  Log.d("videoremove", String.valueOf(videoList.contains(video)));
+                if (videoList.size() > 0) {
+                    Log.d("sizebooro", "sizebooro");
+                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(), tag);
 
                     relatedVideosList.setAdapter(videoListByTagAdapter);
-                }else {
-                    Log.d("sizebooro","choto");
+                } else {
+                    Log.d("sizebooro", "choto");
 
                     loadRelatedVideoFromYoutube(videoId);
                 }
 
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -209,12 +260,12 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     JSONArray itemsArray = jsonObject.getJSONArray("items");
-                    for(int i = 0;i<itemsArray.length();i++){
+                    for (int i = 0; i < itemsArray.length(); i++) {
                         JSONObject item = itemsArray.getJSONObject(i);
                         String videoId = item.getJSONObject("id").getString("videoId");
                         videoList.add(videoId);
                     }
-                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(),tag);
+                    VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoList, getApplicationContext(), tag);
 
                     relatedVideosList.setAdapter(videoListByTagAdapter);
                 } catch (JSONException e) {
@@ -227,7 +278,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
     private void getVideoData() {
         String url = Constants.getDataUrl(videoId);
-        Log.d("url",url);
+        Log.d("url", url);
         VolleyRequest.sendRequestGet(this, url, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
@@ -251,15 +302,15 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             String viewCount = statisticsObject.getString("viewCount");
 
             String likeCount;
-            if(statisticsObject.has("likeCount")){
+            if (statisticsObject.has("likeCount")) {
                 likeCount = statisticsObject.getString("likeCount");
-            }else{
+            } else {
                 likeCount = "0";
             }
             String commentCount = statisticsObject.getString("commentCount");
 
 
-            Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount,thumbnail);
+            Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount, thumbnail);
 
             setUpViews(video);
         } catch (JSONException e) {
@@ -275,11 +326,11 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(description_layout_visible){
+                if (description_layout_visible) {
                     description.setVisibility(View.GONE);
                     description_layout_visible = false;
                     indicatorDescription.setText("{fa-caret-down}");
-                }else {
+                } else {
                     description.setVisibility(View.VISIBLE);
                     description_layout_visible = true;
                     indicatorDescription.setText("{fa-caret-up}");
@@ -292,6 +343,9 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         likeCount.setText(video.getLikeCount());
         commentCount.setText(video.getCommentCount());
 
+        fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_TITLE, video.getTitle());
+        fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_THUMBNAIL, video.getThumbnail());
+        fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_DESCRIPTION, video.getDescription());
     }
 
     @Override
@@ -308,33 +362,67 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.like:
+        switch (view.getId()) {
+            case R.id.like_layout:
                 doLike();
                 break;
-            case R.id.share:
+            case R.id.share_layout:
+                doShare();
                 break;
-            case R.id.comment:
+            case R.id.comment_layout:
+                break;
+            case R.id.favourite_layout:
+                doFavourite();
                 break;
         }
 
     }
 
+    private void doShare() {
+    }
+
     private void doLike() {
-        if(isUserLoggedIn){
-            if(isLikedByCurrentUser){
+        if (isUserLoggedIn) {
+            if (isLikedByCurrentUser) {
                 userDb.child(loggedInUserId).child(Constants.LIKED).child(videoId).removeValue();
-
-                like.setTextColor(Color.BLACK);
-            }else {
+                videoDb.child(videoId).child(Constants.USER_WHO_LIKED).child(loggedInUserId).removeValue();
+                like.setTextColor(iconNormalColor);
+                isLikedByCurrentUser = false;
+            } else {
                 userDb.child(loggedInUserId).child(Constants.LIKED).child(videoId).setValue(1);
+                videoDb.child(videoId).child(Constants.USER_WHO_LIKED).child(loggedInUserId).setValue(1);
 
-                like.setTextColor(Color.BLUE);
+                like.setTextColor(iconSelectedColor);
+                isLikedByCurrentUser = true;
             }
-        }else {
+        } else {
             //dologin
         }
 
 
+    }
+
+    private void doFavourite(){
+        if (isUserLoggedIn) {
+            if (isFavouriteByCurrentUser) {
+                userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).removeValue();
+                videoDb.child(videoId).child(Constants.USER_WHO_FAVOURITE).child(loggedInUserId).removeValue();
+                favourite.setTextColor(iconSelectedColor);
+                favourite.setText(favouriteIcon);
+                isFavouriteByCurrentUser = false;
+            } else {
+                userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).setValue(1);
+                videoDb.child(videoId).child(Constants.USER_WHO_FAVOURITE).child(loggedInUserId).setValue(1);
+
+                favourite.setTextColor(iconSelectedColor);
+                favourite.setText(favouriteIcon);
+
+                isFavouriteByCurrentUser = true;
+            }
+
+
+        }else {
+
+        }
     }
 }

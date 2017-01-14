@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import net.optimusbs.videoapp.Adapters.SavedSearchAdapter;
 import net.optimusbs.videoapp.R;
+import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class SavedSearch extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_saved_search, container, false);
+        SetUpToolbar.setTitle("Saved Search",getActivity());
         initializeView(view);
         hideSearchEditText();
         return view;

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -29,8 +30,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.Fragments.AllVideos;
 import net.optimusbs.videoapp.Fragments.HomeBannerFragment;
 import net.optimusbs.videoapp.Fragments.HomeFragment;
+import net.optimusbs.videoapp.Fragments.MyVideosFragment;
 import net.optimusbs.videoapp.Fragments.NavigationDrawerFragment;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
@@ -43,33 +46,48 @@ import java.util.Iterator;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
 
     Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     @InjectView(R.id.home)
-    LinearLayout homeLayout;
+    RelativeLayout homeLayout;
 
     @InjectView(R.id.all_videos)
-    LinearLayout allVideoLayout;
+    RelativeLayout allVideoLayout;
 
     @InjectView(R.id.my_videos)
-    LinearLayout myVideoLayout;
+    RelativeLayout myVideoLayout;
 
     @InjectView(R.id.notification)
-    LinearLayout notificationLayout;
+    RelativeLayout notificationLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.activity_home);
-        //ButterKnife.inject(this);
+        ButterKnife.inject(this);
         setUpToolbarAndDrawer();
-        getSupportFragmentManager().
+        if(getIntent().hasExtra("fragment_name")){
+            if(getIntent().getStringExtra("fragment_name").equals("all_videos")){
+                navigateToAllVideos();
+            }else {
+                navigateToHome();
+            }
+        }else {
+            navigateToHome();
+        }
+        /*getSupportFragmentManager().
                 beginTransaction().
                 //setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
                 replace(R.id.container, new HomeFragment()).
-                commit();
+                commit();*/
+
+
+        homeLayout.setOnClickListener(this);
+        allVideoLayout.setOnClickListener(this);
+        myVideoLayout.setOnClickListener(this);
+        notificationLayout.setOnClickListener(this);
 
 
 
@@ -89,6 +107,42 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.home:
+                navigateToHome();
+                break;
+            case R.id.all_videos:
+                navigateToAllVideos();
+                break;
+            case R.id.my_videos:
+                navigateToMyVideos();
+                break;
+        }
+    }
 
+    private void navigateToAllVideos() {
+        getSupportFragmentManager().
+                beginTransaction().
+                //setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                        replace(R.id.container, new AllVideos()).
+                commit();}
 
+    private void navigateToHome() {
+        getSupportFragmentManager().
+                beginTransaction().
+                //setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                        replace(R.id.container, new HomeFragment()).
+                commit();
+
+    }
+
+    private void navigateToMyVideos() {
+        getSupportFragmentManager().
+                beginTransaction().
+                //setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
+                        replace(R.id.container, new MyVideosFragment()).
+                commit();
+    }
 }
