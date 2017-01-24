@@ -28,10 +28,12 @@ import com.joanzapata.iconify.widget.IconTextView;
 
 import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.Classes.Video;
+import net.optimusbs.videoapp.Fragments.LoginDialog;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
+import net.optimusbs.videoapp.interfaces.DialogDismissListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,11 +110,14 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
     int iconNormalColor, iconSelectedColor;
 
+    LoginDialog loginDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.fragment_youtube_player);
+        loginDialog = new LoginDialog();
         fireBaseClass = new FireBaseClass(this);
         iconNormalColor = ContextCompat.getColor(this, R.color.video_player_bottom_icon_color);
         iconSelectedColor = ContextCompat.getColor(this, R.color.video_player_bottom_icon_selected_color);
@@ -396,6 +401,18 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                 isLikedByCurrentUser = true;
             }
         } else {
+            loginDialog.setDialogDismissListener(new DialogDismissListener() {
+                @Override
+                public void onDismiss(boolean success) {
+                    if(success){
+                        isUserLoggedIn = true;
+                        loggedInUserId = Profile.getCurrentProfile().getId();
+                        doLike();
+                    }
+                }
+            });
+            loginDialog.show(getFragmentManager(),"");
+
             //dologin
         }
 
@@ -422,6 +439,19 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
 
         }else {
+            loginDialog.setDialogDismissListener(new DialogDismissListener() {
+                @Override
+                public void onDismiss(boolean success) {
+                    if(success){
+                        isUserLoggedIn = true;
+                        loggedInUserId = Profile.getCurrentProfile().getId();
+                        doFavourite();
+                    }
+                }
+            });
+            loginDialog.show(getFragmentManager(),"");
+
+
 
         }
     }

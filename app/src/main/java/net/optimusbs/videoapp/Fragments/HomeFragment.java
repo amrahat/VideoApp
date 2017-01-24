@@ -186,7 +186,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void setOtherTagVideo() {
-
         homeCategoryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
