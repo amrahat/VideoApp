@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
 
-    tools:context="net.optimusbs.videoapp.Fragments.Search">
+    tools:context="net.optimusbs.videoapp.fragments.Search">
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView

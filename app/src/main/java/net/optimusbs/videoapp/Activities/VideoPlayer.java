@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Activities;
+package net.optimusbs.videoapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -26,9 +26,9 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
 
-import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
-import net.optimusbs.videoapp.Classes.Video;
-import net.optimusbs.videoapp.Fragments.LoginDialog;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.models.Video;
+import net.optimusbs.videoapp.fragments.LoginDialog;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;

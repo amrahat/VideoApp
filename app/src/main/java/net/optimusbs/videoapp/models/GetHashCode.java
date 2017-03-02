@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Classes;
+package net.optimusbs.videoapp.models;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

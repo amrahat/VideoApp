@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Adapters;
+package net.optimusbs.videoapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.optimusbs.videoapp.Activities.VideoPlayer;
-import net.optimusbs.videoapp.Classes.Video;
+import net.optimusbs.videoapp.activities.VideoPlayer;
+import net.optimusbs.videoapp.models.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
@@ -65,7 +65,7 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
                     holder.viewCount.setText(video.getViewCount());
                     holder.likeCount.setText(video.getLikeCount());
                     holder.commentCount.setText(video.getCommentCount());
-                    Picasso.with(context).load(video.getThumbnail()).into(holder.thumbnail);
+                    Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumbnail);
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override

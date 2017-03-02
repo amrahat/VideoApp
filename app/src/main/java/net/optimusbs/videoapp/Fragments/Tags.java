@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.Adapters.TagRecyclerViewAdapter;
-import net.optimusbs.videoapp.Classes.Tag;
+import net.optimusbs.videoapp.adapters.TagRecyclerViewAdapter;
+import net.optimusbs.videoapp.models.Tag;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;

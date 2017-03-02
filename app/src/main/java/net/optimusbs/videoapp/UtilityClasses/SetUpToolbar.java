@@ -1,17 +1,9 @@
 package net.optimusbs.videoapp.UtilityClasses;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.widget.IconTextView;
-
-import net.optimusbs.videoapp.Activities.Activity2;
-import net.optimusbs.videoapp.Fragments.Search;
 import net.optimusbs.videoapp.R;
 
 

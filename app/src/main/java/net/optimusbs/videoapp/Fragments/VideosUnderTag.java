@@ -1,7 +1,5 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,7 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;

@@ -1,15 +1,12 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -22,13 +19,10 @@ import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import net.optimusbs.videoapp.Activities.Activity2;
-import net.optimusbs.videoapp.Activities.HomeActivity;
-import net.optimusbs.videoapp.Classes.User;
+import net.optimusbs.videoapp.activities.Activity2;
+import net.optimusbs.videoapp.activities.HomeActivity;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
-
-import java.util.Set;
 
 
 public class Login extends Fragment implements FacebookCallback<LoginResult> {
@@ -70,6 +64,7 @@ public class Login extends Fragment implements FacebookCallback<LoginResult> {
                 if(currentAccessToken==null){
                     ((Activity2) getActivity()).hideUserLayout();
                 }else {
+                    Log.d("accesstoken", currentAccessToken.getToken());
                     ((Activity2) getActivity()).showUserLayout();
 
                 }

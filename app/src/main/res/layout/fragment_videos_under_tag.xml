@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.optimusbs.videoapp.Fragments.VideosUnderTag">
+    tools:context="net.optimusbs.videoapp.fragments.VideosUnderTag">
 
     <!-- TODO: Update blank fragment layout -->
    <android.support.v7.widget.RecyclerView

@@ -1,7 +1,6 @@
-package net.optimusbs.videoapp.Adapters;
+package net.optimusbs.videoapp.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.optimusbs.videoapp.Classes.Tag;
-import net.optimusbs.videoapp.Fragments.Tags;
-import net.optimusbs.videoapp.Fragments.VideosUnderTag;
+import net.optimusbs.videoapp.models.Tag;
+import net.optimusbs.videoapp.fragments.VideosUnderTag;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;
 

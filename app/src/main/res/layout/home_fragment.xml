@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
 
         android:orientation="vertical"
-        tools:context="net.optimusbs.videoapp.Activities.HomeActivity">
+        tools:context="net.optimusbs.videoapp.activities.HomeActivity">
 
         <LinearLayout
             android:layout_width="match_parent"

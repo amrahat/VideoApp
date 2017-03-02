@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.content.Intent;
@@ -6,18 +6,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.joanzapata.iconify.widget.IconTextView;
 
-import net.optimusbs.videoapp.Activities.HomeActivity;
-import net.optimusbs.videoapp.Activities.VideoPlayer;
+import net.optimusbs.videoapp.activities.VideoPlayer;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;

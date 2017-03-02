@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.os.Bundle;
@@ -11,14 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.AccessToken;
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;

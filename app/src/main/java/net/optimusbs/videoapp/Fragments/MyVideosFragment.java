@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.content.Intent;
@@ -28,9 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.Activities.Activity2;
-import net.optimusbs.videoapp.Activities.HomeActivity;
-import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;

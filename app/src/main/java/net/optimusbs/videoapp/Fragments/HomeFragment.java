@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.os.Bundle;
@@ -7,15 +7,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,15 +20,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 
-import net.optimusbs.videoapp.Adapters.VideoListByTagAdapter;
-import net.optimusbs.videoapp.Classes.GetHashCode;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
+import net.optimusbs.videoapp.models.GetHashCode;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -78,17 +74,18 @@ public class HomeFragment extends Fragment {
         setOtherTagVideo();
         GetHashCode.printHashCode(getContext());
 
-        SetUpToolbar.setTitle("Home",getActivity());
+        SetUpToolbar.setTitle("Home", getActivity());
         return view;
     }
 
     private void getLoggedInStatus() {
-        if(AccessToken.getCurrentAccessToken()!=null && !AccessToken.getCurrentAccessToken().isExpired()){
-            String propicUrl = Profile.getCurrentProfile().getProfilePictureUri(500,500).toString();
-        }
-        else {
-            Log.d("nai","nai");
-        }
+        /*if (AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()) {
+            if (Profile.getCurrentProfile().getProfilePictureUri(500, 500) != null) {
+                String propicUrl = Profile.getCurrentProfile().getProfilePictureUri(500, 500).toString();
+            }
+        } else {
+            Log.d("nai", "nai");
+        }*/
 
     }
 
@@ -297,7 +294,7 @@ public class HomeFragment extends Fragment {
     private void populateHomeBanner(ArrayList<String> videoId, final boolean leftToRight, String tag) {
         final HomeBannerFragment homeBannerFragment = new HomeBannerFragment(onSwipe);
 
-    //    WeakReference<HomeBannerFragment> homeBannerFragment = new WeakReference<>(new HomeBannerFragment(onSwipe));
+        //    WeakReference<HomeBannerFragment> homeBannerFragment = new WeakReference<>(new HomeBannerFragment(onSwipe));
         Bundle bundle = new Bundle();
         // String[] videoIdArray = {"FNb1iB3VqEc","Qro_C8B-zxA","XuEEwRvuu0A"};
 

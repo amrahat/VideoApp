@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.optimusbs.videoapp.Adapters.SavedSearchAdapter;
+import net.optimusbs.videoapp.adapters.SavedSearchAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;

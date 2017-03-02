@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Adapters;
+package net.optimusbs.videoapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.optimusbs.videoapp.Activities.VideoPlayer;
-import net.optimusbs.videoapp.Classes.Video;
+import net.optimusbs.videoapp.activities.VideoPlayer;
+import net.optimusbs.videoapp.models.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;
 
@@ -46,7 +46,7 @@ public class SearchYoutubeVideoRecyclerView extends RecyclerView.Adapter<SearchY
     public void onBindViewHolder(VideoList holder, int position) {
         final Video video = videos.get(position);
         holder.title.setText(video.getTitle());
-        Picasso.with(context).load(video.getThumbnail()).into(holder.thumnail);
+        Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumnail);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

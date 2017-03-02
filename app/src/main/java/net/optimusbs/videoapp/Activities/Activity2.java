@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Activities;
+package net.optimusbs.videoapp.activities;
 
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +10,11 @@ import android.widget.RelativeLayout;
 
 import com.joanzapata.iconify.widget.IconTextView;
 
-import net.optimusbs.videoapp.Fragments.Login;
-import net.optimusbs.videoapp.Fragments.NavigationDrawerFragment;
-import net.optimusbs.videoapp.Fragments.SavedSearch;
-import net.optimusbs.videoapp.Fragments.Search;
-import net.optimusbs.videoapp.Fragments.Tags;
+import net.optimusbs.videoapp.fragments.Login;
+import net.optimusbs.videoapp.fragments.NavigationDrawerFragment;
+import net.optimusbs.videoapp.fragments.SavedSearch;
+import net.optimusbs.videoapp.fragments.Search;
+import net.optimusbs.videoapp.fragments.Tags;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 

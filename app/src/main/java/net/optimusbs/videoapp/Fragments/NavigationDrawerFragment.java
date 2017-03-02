@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -20,6 +21,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.database.DatabaseReference;
@@ -27,11 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
-import net.optimusbs.videoapp.Activities.Activity2;
-import net.optimusbs.videoapp.Activities.HomeActivity;
-import net.optimusbs.videoapp.Classes.User;
+import net.optimusbs.videoapp.activities.Activity2;
+import net.optimusbs.videoapp.activities.HomeActivity;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+
+import java.util.Arrays;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -61,6 +64,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     AccessTokenTracker accessTokenTracker;
 
     String login,logout;
+    private String TAG = "navdrawer";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,8 +72,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_nav_drawer, container, false);
 
-        login = getContext().getResources().getString(R.string.login_facebook);
-        logout = getContext().getResources().getString(R.string.logout_facebook);
+        login = getString(R.string.login_facebook);
+        logout = getString(R.string.logout_facebook);
         initView(view);
         setOnClickListeners();
 
@@ -281,6 +285,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     private void getLoggedInData() {
         if (AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()) {
             setOnLoggedIn();
+            Log.d("accesstoken", AccessToken.getCurrentAccessToken().getToken());
+
         } else {
            // userLayout.setVisibility(View.GONE);
             setOnLoggedOut();
@@ -320,7 +326,12 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     }
 
     private void initializeFacebookButton(View view){
+        LoginManager.getInstance().logInWithPublishPermissions(
+                getActivity(),
+                Arrays.asList("publish_actions"));
+
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
+       // loginButton.setPublishPermissions("publish_actions");
         loginButton.setReadPermissions("email");
         // If using in a fragment
         loginButton.setFragment(this);
@@ -357,7 +368,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     public void onSuccess(LoginResult loginResult) {
         Profile profile = Profile.getCurrentProfile();
         //  User user = new User(profile.getId(),profile.getName(),profile.getProfilePictureUri(500,500).toString());
-        Log.d("idaslkdfjal",profile.getFirstName());
+        Log.d("idaslkdfjal",profile.getFirstName()+AccessToken.getCurrentAccessToken().getToken());
+
         userDb.child(profile.getId()).child(Constants.USER_IMAGE).setValue(profile.getProfilePictureUri(500,500).toString());
         userDb.child(profile.getId()).child(Constants.USER_NAME).setValue(profile.getName());
 
@@ -374,11 +386,13 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     }
     @Override
     public void onCancel() {
+        Log.d(TAG, "onError: facebookerror "+"cancel");
 
     }
 
     @Override
     public void onError(FacebookException error) {
-
+        Log.d(TAG, "onError: facebookerror "+error.getMessage());
+        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

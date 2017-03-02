@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Classes;
+package net.optimusbs.videoapp.models;
 
 /**
  * Created by AMRahat on 1/13/2017.

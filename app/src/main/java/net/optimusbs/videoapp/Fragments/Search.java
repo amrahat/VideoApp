@@ -1,4 +1,4 @@
-package net.optimusbs.videoapp.Fragments;
+package net.optimusbs.videoapp.fragments;
 
 
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +21,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.Adapters.SearchYoutubeVideoRecyclerView;
-import net.optimusbs.videoapp.Adapters.TagRecyclerViewAdapter;
-import net.optimusbs.videoapp.Classes.Tag;
-import net.optimusbs.videoapp.Classes.Video;
+import net.optimusbs.videoapp.adapters.SearchYoutubeVideoRecyclerView;
+import net.optimusbs.videoapp.adapters.TagRecyclerViewAdapter;
+import net.optimusbs.videoapp.models.Tag;
+import net.optimusbs.videoapp.models.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;

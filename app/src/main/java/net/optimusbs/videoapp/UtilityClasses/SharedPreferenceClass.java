@@ -6,12 +6,8 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import net.optimusbs.videoapp.Fragments.Search;
-
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeMap;
 
 /**
  * Created by Sohel on 1/7/2017.

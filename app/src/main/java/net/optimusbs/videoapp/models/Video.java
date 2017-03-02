@@ -1,6 +1,4 @@
-package net.optimusbs.videoapp.Classes;
-
-import android.util.Log;
+package net.optimusbs.videoapp.models;
 
 import java.io.Serializable;
 

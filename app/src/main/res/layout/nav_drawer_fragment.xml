@@ -1,6 +1,6 @@
 <fragment
     android:id="@+id/fragment_navigation_drawer"
-    android:name="net.optimusbs.videoapp.Fragments.NavigationDrawerFragment"
+    android:name="net.optimusbs.videoapp.fragments.NavigationDrawerFragment"
     android:layout_width="320dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"

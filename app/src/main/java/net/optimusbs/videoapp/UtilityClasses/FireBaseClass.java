@@ -1,23 +1,10 @@
 package net.optimusbs.videoapp.UtilityClasses;
 
 import android.content.Context;
-import android.os.Bundle;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import net.optimusbs.videoapp.Classes.Video;
-
-import org.json.JSONArray;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Santo on 1/3/2017.
