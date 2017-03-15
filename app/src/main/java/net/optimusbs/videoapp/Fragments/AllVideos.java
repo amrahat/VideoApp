@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import net.optimusbs.videoapp.adapters.VideoListByTagAdapter;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
+import net.optimusbs.videoapp.models.Video;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,19 +53,26 @@ public class AllVideos extends Fragment {
     }
 
     private void getAllVideos() {
-            FirebaseDatabase.getInstance().getReference(Constants.VIDEO_REF).addValueEventListener(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference(Constants.VIDEO_REF).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                    ArrayList<String> videoIds = new ArrayList<String>();
-                    while (iterator.hasNext()){
-                        DataSnapshot snapshot = iterator.next();
-                        String videoId = snapshot.getKey();
-                        videoIds.add(videoId);
-                    }
+                    GenericTypeIndicator<ArrayList<Video>> t = new GenericTypeIndicator<ArrayList<Video>>() {};
+                    ArrayList<Video> videoList = new ArrayList<Video>();
 
-                    if(videoIds.size()!=0){
-                        setUpRecyclerView(videoIds);
+
+                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                    //ArrayList<String> videoIds = new ArrayList<String>();
+                    while (iterator.hasNext()) {
+                        DataSnapshot snapshot = iterator.next();
+                        Video video = snapshot.getValue(Video.class);
+                        video.setId(snapshot.getKey());
+                        videoList.add(video);
+
+                        //String videoId = snapshot.getKey();
+                        //videoIds.add(videoId);
+                    }
+                    if(videoList.size()!=0){
+                        setUpRecyclerView(videoList);
                     }
                 }
 
@@ -74,11 +83,11 @@ public class AllVideos extends Fragment {
             });
     }
 
-    private void setUpRecyclerView(ArrayList<String> videoIds) {
+    private void setUpRecyclerView(ArrayList<Video> videoIds) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        VideoListByTagAdapter videoListByTagAdapter = new VideoListByTagAdapter(videoIds, getActivity(), "");
+        VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videoIds, getActivity(), "");
         recyclerView.setAdapter(videoListByTagAdapter);
     }
 
@@ -89,10 +98,15 @@ public class AllVideos extends Fragment {
     private void setBackGroundColor() {
         indicatorSmallColor = ContextCompat.getColor(getContext(), R.color.topbar_color);
         indicatorLargeColor = ContextCompat.getColor(getContext(), R.color.toolbar_color);
-        getActivity().findViewById(R.id.my_videos).setBackgroundColor(indicatorSmallColor);
+        /*getActivity().findViewById(R.id.my_videos).setBackgroundColor(indicatorSmallColor);
         getActivity().findViewById(R.id.home).setBackgroundColor(indicatorSmallColor);
         getActivity().findViewById(R.id.all_videos).setBackgroundColor(indicatorLargeColor);
-        getActivity().findViewById(R.id.notification).setBackgroundColor(indicatorSmallColor);
+        getActivity().findViewById(R.id.notification).setBackgroundColor(indicatorSmallColor);*/
+
+        getActivity().findViewById(R.id.my_videos_bar).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.all_videos_bar).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.notification_bar).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.recent_bar).setVisibility(View.GONE);
 
     }
 

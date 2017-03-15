@@ -5,6 +5,8 @@
     android:background="@color/topbar_color"
     android:orientation="horizontal"
     android:weightSum="4"
+    android:divider="@drawable/divider_vertical"
+    android:showDividers="middle"
 
     >
 
@@ -25,6 +27,11 @@
             android:textColor="@color/top_bar_icon_color"
             android:textSize="@dimen/mainactivity_top_bar_icon_size" />
 
+        <include layout="@layout/selected_bottom_bar"
+            android:id="@+id/recent_bar"
+            android:visibility="gone"/>
+
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -44,7 +51,9 @@
             android:textColor="@color/top_bar_icon_color"
             android:textSize="@dimen/mainactivity_top_bar_icon_size" />
 
-
+        <include layout="@layout/selected_bottom_bar"
+            android:id="@+id/all_videos_bar"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,13 +66,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="{fa-user}"
+            android:text="{fa-heart}"
             android:layout_marginLeft="-15dp"
             android:layout_marginBottom="-5dp"
             android:id="@+id/my_videos_user_icon"
             android:textColor="@color/top_bar_icon_color"
             android:textSize="13sp" />
-        <com.joanzapata.iconify.widget.IconTextView
+        <!--<com.joanzapata.iconify.widget.IconTextView
             android:layout_width="@dimen/mainactivity_top_bar_icon_width_height"
             android:layout_height="@dimen/mainactivity_top_bar_icon_width_height"
             android:layout_centerInParent="true"
@@ -72,9 +81,11 @@
             android:layout_toLeftOf="@id/my_videos_user_icon"
             android:text="@string/icon_myvideos"
             android:textColor="@color/top_bar_icon_color"
-            android:textSize="@dimen/mainactivity_top_bar_icon_size" />
+            android:textSize="@dimen/mainactivity_top_bar_icon_size" />-->
 
-
+        <include layout="@layout/selected_bottom_bar"
+            android:id="@+id/my_videos_bar"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
@@ -94,7 +105,9 @@
             android:textColor="@color/top_bar_icon_color"
             android:textSize="@dimen/mainactivity_top_bar_icon_size" />
 
-
+        <include layout="@layout/selected_bottom_bar"
+            android:id="@+id/notification_bar"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 

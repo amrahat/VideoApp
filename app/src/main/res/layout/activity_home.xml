@@ -9,32 +9,59 @@
 
     android:orientation="vertical"
     tools:context="net.optimusbs.videoapp.activities.HomeActivity">
-    <include layout="@layout/toolbar" />
 
-    <android.support.v4.widget.DrawerLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:id="@+id/drawer_layout"
         android:layout_height="match_parent">
+
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_container"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-            <include layout="@layout/top_bar" />
-            <LinearLayout
+
+
+            <android.support.v4.widget.DrawerLayout
+                android:id="@+id/drawer_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/container">
+                android:layout_height="match_parent">
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/main_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <include layout="@layout/toolbar" />
+
+                    <include
+                        android:id="@+id/top_bar"
+                        layout="@layout/top_bar" />
+
+                    <LinearLayout
+                        android:id="@+id/container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <include layout="@layout/nav_drawer_fragment" />
+            </android.support.v4.widget.DrawerLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/loader_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/beautify_loading_screen"
+            android:orientation="horizontal">
 
         </LinearLayout>
-        <include layout="@layout/nav_drawer_fragment"
-            />
-    </android.support.v4.widget.DrawerLayout>
-
+    </FrameLayout>
 
 
 </LinearLayout>

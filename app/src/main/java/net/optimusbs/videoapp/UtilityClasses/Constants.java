@@ -19,10 +19,16 @@ public class Constants {
     public static final String USER_WHO_FAVOURITE = "favourite_users" ;
     public static final String USER_NAME = "name" ;
     public static final String USER_IMAGE = "image" ;
+    public static final String SEARCH_REF = "search";
+    public static String FACEBOOK_LIKE_COUNT = "facebook_like_count";
+    public static String FACEBOOK_COMMENT_COUNT = "facebook_comment_count";
+    public static String FACEBOOK_POST_ID = "facebook_post_id";
+    public static final String VIEW_COUNT = "viewCount" ;
     public static String HOME_CAT_REF = "home-categories";
     public static String VIDEO_TITLE = "title";
     public static String VIDEO_THUMBNAIL = "thumbnail";
     public static String VIDEO_DESCRIPTION = "description";
+    public static String FAVOURITE_REF = "fav_videos";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +
             "&part=contentDetails,snippet,,statistics,status";

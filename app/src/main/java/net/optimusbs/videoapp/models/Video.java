@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Video implements Serializable {
-    String id,title,description,publishedAt,viewCount,likeCount,commentCount,thumbnail;
+    private String id,title,description,publishedAt,viewCount,likeCount,commentCount,thumbnail;
 
     public Video() {
     }

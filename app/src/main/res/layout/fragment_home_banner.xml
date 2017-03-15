@@ -8,79 +8,87 @@
     <RelativeLayout
         android:id="@+id/top_player_layout"
         android:layout_width="match_parent"
-        android:background="@color/thumbnail_background_color"
-        android:layout_height="130dp">
+        android:layout_height="130dp"
+        android:background="@color/thumbnail_background_color">
 
         <com.google.android.youtube.player.YouTubeThumbnailView
             android:id="@+id/youtube_player_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop">
 
 
         </com.google.android.youtube.player.YouTubeThumbnailView>
 
         <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/play1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:id="@+id/play1"
-            android:visibility="gone"
             android:text="@string/icon_youtube_play"
             android:textColor="@color/color_youtube_play"
-            android:textSize="@dimen/size_youtube_play" />
+            android:textSize="@dimen/size_youtube_play"
+            android:visibility="gone" />
 
         <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/loader1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/loader1"
             android:gravity="center"
             android:text="@string/icon_youtube_loader"
             android:textColor="@color/color_youtube_loader"
             android:textSize="@dimen/size_youtube_loader" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_player_layout"
+        android:background="@drawable/dividers"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@id/top_player_layout"
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal">
+        android:layout_below="@id/divider"
+        android:divider="@drawable/divider_vertical"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/thumbnail_background_color"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/thumbnail_background_color">
 
             <com.google.android.youtube.player.YouTubeThumbnailView
                 android:id="@+id/youtube_player_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop">
 
             </com.google.android.youtube.player.YouTubeThumbnailView>
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/play2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/icon_youtube_play"
-                android:id="@+id/play2"
                 android:textColor="@color/color_youtube_play"
                 android:textSize="@dimen/size_youtube_play"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/loader2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:id="@+id/loader2"
 
                 android:text="@string/icon_youtube_loader"
                 android:textColor="@color/color_youtube_loader"
@@ -88,40 +96,38 @@
         </RelativeLayout>
 
 
-
-
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/thumbnail_background_color"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/thumbnail_background_color">
 
             <com.google.android.youtube.player.YouTubeThumbnailView
                 android:id="@+id/youtube_player_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_margin="5dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop">
 
             </com.google.android.youtube.player.YouTubeThumbnailView>
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/play3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/icon_youtube_play"
-                android:id="@+id/play3"
                 android:textColor="@color/color_youtube_play"
                 android:textSize="@dimen/size_youtube_play"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/loader3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:id="@+id/loader3"
 
                 android:text="@string/icon_youtube_loader"
                 android:textColor="@color/color_youtube_loader"

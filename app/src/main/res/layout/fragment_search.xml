@@ -29,7 +29,7 @@
         android:id="@+id/load_more"
         android:text="Load More"
         android:visibility="gone"
-        android:background="@color/topbar_color"
+        android:background="@drawable/button_background_theme"
         android:textColor="#ffffff"
         />
 

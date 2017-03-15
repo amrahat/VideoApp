@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 
 public class SavedSearchAdapter extends RecyclerView.Adapter<SavedSearchAdapter.SavedSearch> {
-    ArrayList<String> savedSearch;
-    Context context;
+    private ArrayList<String> savedSearch;
+    private Context context;
 
     public SavedSearchAdapter(ArrayList<String> savedSearch, Context context) {
         this.savedSearch = savedSearch;

@@ -61,8 +61,7 @@ public class Activity2 extends AppCompatActivity {
                 getSupportFragmentManager().
                         beginTransaction().
                         setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
-                        replace(R.id.container, new Tags()).
-                        addToBackStack("tags").
+                        add(R.id.container, new Tags()).
                         commit();
                 SetUpToolbar.setTitle("Tags",this);
                 hideSearchEditText();
@@ -72,8 +71,7 @@ public class Activity2 extends AppCompatActivity {
                 getSupportFragmentManager().
                         beginTransaction().
                         setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
-                        replace(R.id.container, new Search()).
-                        addToBackStack("search").
+                        add(R.id.container, new Search()).
                         commit();
                 //SetUpToolbar.setTitle("Search",this);
                 showSearchEditText();

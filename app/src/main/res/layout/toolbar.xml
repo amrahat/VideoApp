@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:textColor="#ffffff"
                 android:gravity="center"
+                android:textAllCaps="true"
                 android:id="@+id/title"/>
 
             <com.joanzapata.iconify.widget.IconTextView

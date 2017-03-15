@@ -3,7 +3,9 @@ package net.optimusbs.videoapp.facebookmodels;
 
 import com.google.gson.annotations.SerializedName;
 
-public class From {
+import java.io.Serializable;
+
+public class From implements Serializable{
 
     @SerializedName("id")
     private String mId;

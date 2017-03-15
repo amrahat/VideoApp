@@ -3,7 +3,9 @@ package net.optimusbs.videoapp.facebookmodels;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FacebookComment {
+import java.io.Serializable;
+
+public class FacebookComment implements Serializable {
 
     @SerializedName("created_time")
     private String mCreatedTime;

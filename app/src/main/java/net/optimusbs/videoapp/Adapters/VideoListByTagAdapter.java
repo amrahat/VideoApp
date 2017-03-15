@@ -63,8 +63,8 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
                 if(video!=null){
                     holder.title.setText(video.getTitle());
                     holder.viewCount.setText(video.getViewCount());
-                    holder.likeCount.setText(video.getLikeCount());
-                    holder.commentCount.setText(video.getCommentCount());
+                   // holder.likeCount.setText(video.getLikeCount());
+                    //holder.commentCount.setText(video.getCommentCount());
                     Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumbnail);
 
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -133,15 +133,15 @@ public class VideoListByTagAdapter extends RecyclerView.Adapter<VideoListByTagAd
     public static class VideoList extends RecyclerView.ViewHolder {
 
         ImageView thumbnail;
-        TextView title,viewCount,likeCount,commentCount;
+        TextView title,viewCount/*,likeCount,commentCount*/;
 
         public VideoList(View itemView) {
             super(itemView);
             thumbnail = (ImageView) itemView.findViewById(R.id.video_thumbnail);
             title = (TextView) itemView.findViewById(R.id.title);
             viewCount = (TextView) itemView.findViewById(R.id.viewCount);
-            likeCount = (TextView) itemView.findViewById(R.id.likeCount);
-            commentCount = (TextView) itemView.findViewById(R.id.commentCount);
+            //likeCount = (TextView) itemView.findViewById(R.id.likeCount);
+            //commentCount = (TextView) itemView.findViewById(R.id.commentCount);
         }
     }
 }

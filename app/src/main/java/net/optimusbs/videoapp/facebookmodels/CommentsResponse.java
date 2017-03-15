@@ -1,12 +1,13 @@
 package net.optimusbs.videoapp.facebookmodels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by AMRahat on 2/27/2017.
  */
 
-public class CommentsResponse {
+public class CommentsResponse implements Serializable{
     private ArrayList<FacebookComment> data;
     private Paging paging;
     private Summary summary;

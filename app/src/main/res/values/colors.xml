@@ -5,23 +5,28 @@
     <color name="colorAccent">#FF4081</color>
 
 
-    <color name="toolbar_color">#ff66b3</color>
-    <color name="topbar_color">#ff4da6</color>
+    <color name="toolbar_color">#D21D52</color>
+    <color name="toolbar_color_selected">#A30936</color>
+    <color name="topbar_color">#ebe6f1</color>
+    <!--<color name="topbar_color">#fc4f81</color>-->
+    <color name="nav_drawer_back_color">#E8E8E7</color>
+    <color name="divider">#E76AA8</color>
+    <color name="pressed_top_bar">#E76AA8</color>
 
 
-    <color name="color_youtube_play">#ffffff</color>
+    <color name="color_youtube_play">#D21D52</color>
     <color name="color_youtube_loader">#ffffff</color>
     <color name="thumbnail_background_color">#000000</color>
     <color name="title_back_pressed">#a3a3a3</color>
     <color name="video_player_bottom_test_back_pressed">#a3a3a3</color>
-    <color name="video_player_bottom_icon_color">#ffffff</color>
+    <color name="video_player_bottom_icon_color">#D21D52</color>
     <color name="video_player_bottom_icon_selected_color">#303F9F</color>
 
 
 
-    <color name="nav_drawer_icon_color">#ffffff</color>
-    <color name="nav_drawer_text_color">#ffffff</color>
-    <color name="top_bar_icon_color">#ffffff</color>
+    <color name="nav_drawer_icon_color">#D21D52</color>
+    <color name="nav_drawer_text_color">#D21D52</color>
+    <color name="top_bar_icon_color">#D21D52</color>
 
 
 
@@ -30,10 +35,7 @@
 
 
     <color name="video_list_icon_color">#a3a3a3</color>
-
-
-
-
+    <color name="back_button_selected">#660C26</color>
 
 
 </resources>

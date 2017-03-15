@@ -1,10 +1,12 @@
 package net.optimusbs.videoapp.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.joanzapata.iconify.Iconify;
@@ -35,6 +37,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @InjectView(R.id.notification)
     RelativeLayout notificationLayout;
+
+    @InjectView(R.id.loader_layout)
+    LinearLayout loaderLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +50,27 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(getIntent().hasExtra("fragment_name")){
             if(getIntent().getStringExtra("fragment_name").equals("all_videos")){
                 navigateToAllVideos();
-            }else {
+            }else if(getIntent().getStringExtra("fragment_name").equals("my_videos")){
+                navigateToMyVideos();
+            }
+            else {
                 navigateToHome();
             }
         }else {
             navigateToHome();
         }
+        if(!getIntent().hasExtra("showloader")){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loaderLayout.setVisibility(View.GONE);
+                }
+            },4000);
+        }else {
+            loaderLayout.setVisibility(View.GONE);
+
+        }
+
         /*getSupportFragmentManager().
                 beginTransaction().
                 //setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).

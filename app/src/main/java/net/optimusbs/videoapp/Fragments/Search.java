@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
-import net.optimusbs.videoapp.adapters.SearchYoutubeVideoRecyclerView;
-import net.optimusbs.videoapp.adapters.TagRecyclerViewAdapter;
-import net.optimusbs.videoapp.models.Tag;
-import net.optimusbs.videoapp.models.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
+import net.optimusbs.videoapp.adapters.SearchResultAdapter;
+import net.optimusbs.videoapp.adapters.SearchYoutubeVideoRecyclerView;
+import net.optimusbs.videoapp.adapters.TagRecyclerViewAdapter;
+import net.optimusbs.videoapp.models.SearchResult;
+import net.optimusbs.videoapp.models.Tag;
+import net.optimusbs.videoapp.models.Video;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,10 +48,12 @@ public class Search extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference tagsRef;
     Button loadMore;
-    RecyclerView tagRecyclerView,searchYouTubeRecyclerView;
+    RecyclerView tagRecyclerView, searchYouTubeRecyclerView;
     String nextPageToken;
     SearchYoutubeVideoRecyclerView searchYoutubeVideoRecyclerView;
     ArrayList<Video> videos;
+    private DatabaseReference searchRef;
+
     public Search() {
         // Required empty public constructor
     }
@@ -57,7 +63,7 @@ public class Search extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         showSearchEditText();
         initializeView(view);
         initializeFirebase();
@@ -73,7 +79,14 @@ public class Search extends Fragment {
     private void initializeFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         tagsRef = firebaseDatabase.getReference(Constants.TAG_REF);
+        searchRef = firebaseDatabase.getReference(Constants.SEARCH_REF);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showSearchEditText();
     }
 
     private void initializeView(View view) {
@@ -104,7 +117,7 @@ public class Search extends Fragment {
             public void onTextChanged(CharSequence charSequence, final int i, int i1, int i2) {
                 // Log.d("change", String.valueOf(charSequence) );
                 final String searchText = String.valueOf(charSequence);
-                if(!searchText.isEmpty()){
+                if (!searchText.isEmpty()) {
                     searchAndPopulateView(searchText);
 
                 }
@@ -120,29 +133,45 @@ public class Search extends Fragment {
     }
 
     private void searchAndPopulateView(final String searchText) {
-        Query queryRef = tagsRef.orderByKey().startAt(searchText).endAt(searchText+"z");
-        final ArrayList<Tag> tags = new ArrayList<Tag>();
+        Query queryRef = searchRef.orderByChild("sort_value").startAt(searchText.toLowerCase()).endAt(searchText + "z");
+
+
+        final ArrayList<SearchResult> searchResults = new ArrayList<>();
         queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()>0){
+                if (dataSnapshot.getChildrenCount() > 0) {
                     Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-                    while (iterator.hasNext()){
+                    while (iterator.hasNext()) {
                         DataSnapshot snapshot = iterator.next();
-                        String tagName = snapshot.getKey();
+                        SearchResult searchResult = new SearchResult();
+                        String id = snapshot.getKey();
+                        searchResult.setId(id);
+                        searchResult.setTitle(snapshot.child("original_value").getValue().toString());
+                        searchResult.setIsTag(isInt(id));
+
+                       // Log.d("search_result", "onDataChange: "+new Gson().toJson(searchResult));
+
+                        searchResults.add(searchResult);
+
+                       /* String tagName = snapshot.getKey();
                         int videoCount = (int) snapshot.getChildrenCount();
 
-                        Tag tag = new Tag(tagName,videoCount);
+                        Tag tag = new Tag(tagName, videoCount);
                         tags.add(tag);
-
+*/
                     }
 
 
                     loadMore.setVisibility(View.GONE);
-                    TagRecyclerViewAdapter tagRecyclerViewAdapter = new TagRecyclerViewAdapter(tags,getActivity(),getFragmentManager(),true);
+                    SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
                     tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
+                    tagRecyclerView.setVisibility(View.VISIBLE);
+                    searchYouTubeRecyclerView.setVisibility(View.GONE);
 
-                }else {
+                } else {
+                    tagRecyclerView.setVisibility(View.GONE);
+                    searchYouTubeRecyclerView.setVisibility(View.VISIBLE);
                     searchFromYoutube(searchText);
                 }
 
@@ -155,15 +184,24 @@ public class Search extends Fragment {
         });
     }
 
+    private boolean isInt(String id) {
+        try {
+            int intId = Integer.parseInt(id);
+            return true;
+        }catch (NumberFormatException e){
+            return false;
+        }
+    }
+
     private void searchFromYoutube(final String searchText) {
         videos = new ArrayList<>();
-        searchYoutubeVideoRecyclerView = new SearchYoutubeVideoRecyclerView(videos,getActivity(),searchText);
+        searchYoutubeVideoRecyclerView = new SearchYoutubeVideoRecyclerView(videos, getActivity(), searchText);
         searchYouTubeRecyclerView.setAdapter(searchYoutubeVideoRecyclerView);
         String searchUrlYoutube = Constants.getSearchUrl(searchText);
         VolleyRequest.sendRequestGet(getContext(), searchUrlYoutube, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
-                parseJson(result,searchText);
+                parseJson(result, searchText);
             }
         });
     }
@@ -174,7 +212,7 @@ public class Search extends Fragment {
             JSONObject jsonObject = new JSONObject(result);
             nextPageToken = jsonObject.getString("nextPageToken");
             JSONArray itemsArray = jsonObject.getJSONArray("items");
-            for(int i = 0;i<itemsArray.length();i++){
+            for (int i = 0; i < itemsArray.length(); i++) {
                 Video video = new Video();
                 JSONObject item = itemsArray.getJSONObject(i);
                 video.setId(item.getJSONObject("id").getString("videoId"));
@@ -190,12 +228,12 @@ public class Search extends Fragment {
             loadMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(nextPageToken!=null && !nextPageToken.isEmpty()){
-                        String nextPageUrl = Constants.getSearchUrl(searchText,nextPageToken);
+                    if (nextPageToken != null && !nextPageToken.isEmpty()) {
+                        String nextPageUrl = Constants.getSearchUrl(searchText, nextPageToken);
                         VolleyRequest.sendRequestGet(getContext(), nextPageUrl, new VolleyRequest.VolleyCallback() {
                             @Override
                             public void onSuccess(String result) {
-                                parseJson(result,searchText);
+                                parseJson(result, searchText);
                             }
                         });
                     }

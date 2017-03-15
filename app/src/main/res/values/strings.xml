@@ -28,4 +28,11 @@
     <string name="fb_login_protocol_scheme">fb703478709811393</string>
     <string name="login_facebook">Log in with Facebook</string>
     <string name="logout_facebook">Log Out</string>
+    <string name="view_all">View All</string>
+    <string name="see_all_text">See All</string>
+    <string name="icon_empty_star">{fa-star-o}</string>
+    <string name="icon_filled_star">{fa-star}</string>
+    <string name="play_video">Play Video</string>
+    <string name="comments">Comments</string>
+    <string name="icon_video">{fa-video-camera}</string>
 </resources>

@@ -46,8 +46,18 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
     @Override
     public void onBindViewHolder(final TagRecyclerViewAdapter.TagList holder, int position) {
         final Tag tag = tags.get(position);
-        holder.tagName.setText(tag.getTagName());
-        holder.videoCount.setText(tag.getVideoCount() + " videos");
+        StringBuilder sb = new StringBuilder(tag.getTagName());
+        sb.setCharAt(0,Character.toUpperCase(sb.charAt(0)));
+        holder.tagName.setText(sb.toString());
+
+        if(tag.getVideoCount()>50){
+            holder.videoCount.setText("50+ videos");
+
+        }else {
+
+            holder.videoCount.setText(tag.getVideoCount() + " videos");
+
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +94,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
             super(itemView);
             videoCount = (TextView) itemView.findViewById(R.id.video_count);
             tagName = (TextView) itemView.findViewById(R.id.tag_name);
+
         }
     }
 }

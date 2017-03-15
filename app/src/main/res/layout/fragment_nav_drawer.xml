@@ -2,36 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/toolbar_color"
-    android:orientation="vertical">
+    android:background="@color/nav_drawer_back_color"
+    android:divider="@drawable/dividers"
+    android:orientation="vertical"
+    android:dividerPadding="15dp"
+    android:onClick="onClick"
+    android:id="@+id/nav_drawer_root"
+    android:showDividers="middle">
+
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:visibility="gone"
+        android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+
+        android:visibility="gone" />
+
     <LinearLayout
+        android:id="@+id/userLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/userLayout"
-        android:padding="@dimen/nav_drawer_menu_padding"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/nav_drawer_menu_padding">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/user_placeholder"
-            android:id="@+id/user_image"/>
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/user_placeholder" />
 
         <TextView
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:id="@+id/user_name"
             android:gravity="center"
-
+            android:paddingLeft="10dp"
+            android:textSize="18sp"
             android:textColor="@color/nav_drawer_text_color"
 
             />
@@ -41,12 +52,11 @@
         android:id="@+id/home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/nav_drawer_menu_background"
-        android:gravity="center"
+        android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
         android:layout_marginLeft="@dimen/nav_drawer_left_margin"
         android:layout_marginRight="@dimen/nav_drawer_right_margin"
         android:layout_marginTop="@dimen/nav_drawer_top_margin"
-        android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/nav_drawer_menu_padding">
 
@@ -72,11 +82,10 @@
         android:id="@+id/all_videos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
         android:layout_marginLeft="@dimen/nav_drawer_left_margin"
         android:layout_marginRight="@dimen/nav_drawer_right_margin"
-        android:background="@drawable/nav_drawer_menu_background"
+        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/nav_drawer_menu_padding">
@@ -96,17 +105,16 @@
             android:textColor="@color/nav_drawer_text_color"
             android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
-   <!-- <include layout="@layout/horizontal_bar" />-->
+    <!-- <include layout="@layout/horizontal_bar" />-->
 
     <LinearLayout
         android:id="@+id/tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/nav_drawer_menu_background"
-        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
         android:layout_marginLeft="@dimen/nav_drawer_left_margin"
         android:layout_marginRight="@dimen/nav_drawer_right_margin"
+        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/nav_drawer_menu_padding">
@@ -122,21 +130,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:text="Tags"
+            android:text="Tags-keywords"
             android:textColor="@color/nav_drawer_text_color"
             android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
-   <!-- <include layout="@layout/horizontal_bar" />-->
+    <!-- <include layout="@layout/horizontal_bar" />-->
 
     <LinearLayout
         android:id="@+id/saved_searches"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
         android:layout_marginLeft="@dimen/nav_drawer_left_margin"
         android:layout_marginRight="@dimen/nav_drawer_right_margin"
-        android:background="@drawable/nav_drawer_menu_background"
+        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/nav_drawer_menu_padding">
@@ -152,21 +159,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
-            android:text="Saved Searches"
+            android:text="My Saved Searches"
             android:textColor="@color/nav_drawer_text_color"
             android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
     <!--<include layout="@layout/horizontal_bar" />-->
 
     <LinearLayout
-        android:id="@+id/login"
+        android:id="@+id/my_videos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
         android:layout_marginLeft="@dimen/nav_drawer_left_margin"
         android:layout_marginRight="@dimen/nav_drawer_right_margin"
-        android:background="@drawable/nav_drawer_menu_background"
+        android:layout_marginTop="@dimen/nav_drawer_top_margin"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/nav_drawer_menu_padding">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/icon_favourite_full"
+            android:textColor="@color/nav_drawer_icon_color"
+            android:textSize="@dimen/nav_drawer_menu_icon_size" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
+            android:text="My favourites"
+            android:textColor="@color/nav_drawer_text_color"
+            android:textSize="@dimen/nav_drawer_menu_text_size" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/nav_drawer_bottom_margin"
+        android:layout_marginLeft="@dimen/nav_drawer_left_margin"
+        android:layout_marginRight="@dimen/nav_drawer_right_margin"
+        android:layout_marginTop="@dimen/nav_drawer_top_margin"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/nav_drawer_menu_padding">
@@ -179,11 +212,11 @@
             android:textSize="@dimen/nav_drawer_menu_icon_size" />
 
         <TextView
+            android:id="@+id/login_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/nav_drawer_menu_text_padding_left"
             android:text="Log In"
-            android:id="@+id/login_text"
             android:textColor="@color/nav_drawer_text_color"
             android:textSize="@dimen/nav_drawer_menu_text_size" />
     </LinearLayout>
