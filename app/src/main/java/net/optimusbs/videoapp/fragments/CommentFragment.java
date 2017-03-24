@@ -28,44 +28,46 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
-import net.optimusbs.videoapp.UtilityClasses.ItemDecoration;
+import net.optimusbs.videoapp.UtilityClasses.UtilsMethod;
 import net.optimusbs.videoapp.adapters.CommentAdapter;
 import net.optimusbs.videoapp.facebookmodels.CommentsResponse;
-import net.optimusbs.videoapp.facebookmodels.FacebookComment;
-import net.optimusbs.videoapp.facebookmodels.From;
 import net.optimusbs.videoapp.facebookutils.FacebookApi;
 import net.optimusbs.videoapp.facebookutils.OnCommentPostListener;
 import net.optimusbs.videoapp.interfaces.OnCommentLoadListener;
+import net.optimusbs.videoapp.interfaces.OnFirebaseCommentLoadListener;
+import net.optimusbs.videoapp.models.FirebaseComment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CommentFragment extends Fragment implements OnCommentLoadListener, View.OnClickListener, OnCommentPostListener, FacebookCallback<LoginResult> {
+public class CommentFragment extends Fragment implements OnCommentLoadListener, View.OnClickListener, OnFirebaseCommentLoadListener, OnCommentPostListener, FacebookCallback<LoginResult> {
 
     private FacebookApi facebookApi;
     private String TAG = "commentfragment";
     private CommentAdapter commentAdapter;
-    private ArrayList<FacebookComment> comments;
+    private ArrayList<FirebaseComment> comments;
     private RecyclerView recyclerView;
     private EditText postEt;
-    private String postid;
+    private String videoId;
     private RelativeLayout postCommentLayout;
     private LoginButton loginButton;
     private LinearLayout loginLayout;
     CallbackManager callbackManager;
     AccessTokenTracker accessTokenTracker;
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference userDb;
+    DatabaseReference userDb, commentRef;
     private TextView postTv;
     private ProfileTracker mProfileTracker;
 
@@ -78,6 +80,8 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         super.onCreate(savedInstanceState);
         comments = new ArrayList<>();
         facebookApi = new FacebookApi(getContext());
+        Log.d(TAG, "timestamp:"+ ServerValue.TIMESTAMP);
+
     }
 
     @Override
@@ -86,8 +90,8 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
         initViews(view);
-        getBundles();
         initializeFireBase();
+        getBundles();
         checkLoginStatus();
         return view;
     }
@@ -95,6 +99,7 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     private void initializeFireBase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         userDb = firebaseDatabase.getReference(Constants.USERDB);
+        commentRef = firebaseDatabase.getReference(Constants.COMMENT_REF);
     }
 
     private void checkLoginStatus() {
@@ -125,16 +130,85 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
 
     private void getBundles() {
         Bundle bundle = getArguments();
-        postid = bundle.getString("post_id");
+        videoId = bundle.getString("video_id");
         // CommentsResponse commentsResponse = (CommentsResponse) bundle.getSerializable("comments");
         //comments = commentsResponse.getData();
-        if (postid != null && !postid.isEmpty()) {
-            if (AccessToken.getCurrentAccessToken() != null) {
-                facebookApi.getCommentsOfPost(postid, AccessToken.getCurrentAccessToken().getToken(), this);
-                // facebookApi.likeAPost(postid);
-            }
+        if (videoId != null && !videoId.isEmpty()) {
+            /*if (AccessToken.getCurrentAccessToken() != null) {
+               // facebookApi.getCommentsOfPost(videoId, AccessToken.getCurrentAccessToken().getToken(), this);
+                // facebookApi.likeAPost(videoId);
+            }*/
+
+            getCommentsFromFirebase(this);
         }
 
+    }
+
+    private void getCommentsFromFirebase(final OnFirebaseCommentLoadListener onFirebaseCommentLoadListener) {
+        final ArrayList<FirebaseComment> firebaseComments = new ArrayList<>();
+        commentRef.child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                if (!iterator.hasNext()) {
+                    onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments);
+                    return;
+                }
+
+                while (iterator.hasNext()) {
+
+                    final FirebaseComment firebaseComment = new FirebaseComment();
+                    DataSnapshot commentSnapShot = iterator.next();
+                    String timestamp = String.valueOf((Long) commentSnapShot.child("timestamp").getValue());
+                    firebaseComment.setTimeStamp(timestamp);
+                    String userid = (String) commentSnapShot.child("profileid").getValue();
+                    firebaseComment.setUserid(userid);
+                    String commentText = (String) commentSnapShot.child("comment").getValue();
+                    firebaseComment.setComment(commentText);
+                   /* Iterator<DataSnapshot> commentSnapshotIterator = commentSnapShot.getChildren().iterator();
+                    // if (commentSnapshotIterator.hasNext()) {
+                    DataSnapshot comment = commentSnapshotIterator.next();
+                    String userid = comment.getKey();
+                    firebaseComment.setUserid(userid);*/
+
+                    userDb.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.hasChild("image")) {
+                                String image = (String) dataSnapshot.child("image").getValue();
+                                firebaseComment.setUserImage(image);
+                            }
+
+
+                            if (dataSnapshot.hasChild("name")) {
+                                String name = (String) dataSnapshot.child("name").getValue();
+                                firebaseComment.setUserName(name);
+                            }
+
+                            firebaseComments.add(firebaseComment);
+
+                            if (!iterator.hasNext()) {
+                                Log.d(TAG, "onDataChange: " + firebaseComments.size());
+                                onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    //   }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void initViews(View view) {
@@ -142,7 +216,7 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new ItemDecoration(getContext()));
+        //recyclerView.addItemDecoration(new ItemDecoration(getContext()));
         commentAdapter = new CommentAdapter(comments, getContext());
         recyclerView.setAdapter(commentAdapter);
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
@@ -159,22 +233,22 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     @Override
     public void onCommentLoad(CommentsResponse commentsResponse) {
         Log.d(TAG, "onCommentLoad: " + commentsResponse.getData().size());
-        loadCommentsInList(commentsResponse);
+        // loadCommentsInList(commentsResponse);
 
     }
 
-    private void loadCommentsInList(CommentsResponse commentsResponse) {
+   /* private void loadCommentsInList(CommentsResponse commentsResponse) {
         comments.addAll(commentsResponse.getData());
         commentAdapter.notifyDataSetChanged();
 
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.post) {
             if (postEt.getText().toString().trim().length() > 0) {
 
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(postEt.getWindowToken(), 0);
                 postComment(postEt.getText().toString().trim());
             }
@@ -182,12 +256,28 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     }
 
     private void postComment(String comment) {
-        facebookApi.postAComment(postid, AccessToken.getCurrentAccessToken().getToken(), comment, this);
+        //facebookApi.postAComment(videoId, AccessToken.getCurrentAccessToken().getToken(), comment, this);
+        String key = commentRef.push().getKey();
+        commentRef.child(videoId).child(key).child("comment").setValue(comment);
+        commentRef.child(videoId).child(key).child("profileid").setValue(Profile.getCurrentProfile().getId());
+        commentRef.child(videoId).child(key).child("timestamp").setValue(ServerValue.TIMESTAMP);
+
+        FirebaseComment firebaseComment = new FirebaseComment();
+        firebaseComment.setUserName(Profile.getCurrentProfile().getName());
+        firebaseComment.setUserImage(Profile.getCurrentProfile().getProfilePictureUri(200, 200).toString());
+        firebaseComment.setComment(comment);
+        firebaseComment.setUserid(Profile.getCurrentProfile().getId());
+        firebaseComment.setTimeStamp(String.valueOf(UtilsMethod.getCurrentTimeStamp()));
+
+        comments.add(firebaseComment);
+        commentAdapter.notifyItemInserted(comments.size() - 1);
+
+        postEt.setText("");
     }
 
     @Override
-    public void onCommentPost(String message,String id) {
-        FacebookComment facebookComment = new FacebookComment();
+    public void onCommentPost(String message, String id) {
+        /*FacebookComment facebookComment = new FacebookComment();
         facebookComment.setMessage(message);
         facebookComment.setId(id);
         From from = new From();
@@ -201,27 +291,26 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         comments.add(facebookComment);
         commentAdapter.notifyItemInserted(comments.size()-1);
 
-        postEt.setText("");
+        postEt.setText("");*/
 
 
     }
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-        if(Profile.getCurrentProfile() == null) {
+        if (Profile.getCurrentProfile() == null) {
             mProfileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                     // profile2 is the new profile
-                    Log.d("facebook", profile2.getFirstName()+"asled");
+                    Log.d("facebook", profile2.getFirstName() + "asled");
                     mProfileTracker.stopTracking();
                     setProfileValueInFirebase(profile2);
                 }
             };
             // no need to call startTracking() on mProfileTracker
             // because it is called by its constructor, internally.
-        }
-        else {
+        } else {
             Profile profile = Profile.getCurrentProfile();
             Log.d("facebook", profile.getFirstName());
             Log.d("idaslkdfjal", profile.getFirstName() + AccessToken.getCurrentAccessToken().getToken());
@@ -231,7 +320,7 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         }
         loginLayout.setVisibility(View.GONE);
         postCommentLayout.setVisibility(View.VISIBLE);
-        facebookApi.getCommentsOfPost(postid, AccessToken.getCurrentAccessToken().getToken(), this);
+        facebookApi.getCommentsOfPost(videoId, AccessToken.getCurrentAccessToken().getToken(), this);
 
     }
 
@@ -256,6 +345,14 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onFirebaseCommentLoad(ArrayList<FirebaseComment> firebaseComments) {
+        comments.clear();
+        comments.addAll(firebaseComments);
+        commentAdapter.notifyDataSetChanged();
 
     }
 }

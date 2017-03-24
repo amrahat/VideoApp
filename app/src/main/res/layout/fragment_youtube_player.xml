@@ -344,6 +344,11 @@
                 android:textSize="@dimen/video_player_bottom_icon_size" />
         </LinearLayout>
 
+        <!--<com.facebook.share.widget.LikeView
+            android:id="@+id/likeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>-->
+
         <LinearLayout
             android:id="@+id/favourite_layout"
             android:layout_width="0dp"

@@ -5,10 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.facebookmodels.FacebookComment;
+import net.optimusbs.videoapp.models.FirebaseComment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,10 +25,10 @@ import java.util.Locale;
  */
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentHolder> {
-    private ArrayList<FacebookComment> comments;
+    private ArrayList<FirebaseComment> comments;
     private Context context;
 
-    public CommentAdapter(ArrayList<FacebookComment> comments, Context context) {
+    public CommentAdapter(ArrayList<FirebaseComment> comments, Context context) {
         this.comments = comments;
         this.context = context;
     }
@@ -37,10 +41,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
 
     @Override
     public void onBindViewHolder(CommentHolder holder, int position) {
-        FacebookComment facebookComment = comments.get(position);
-        holder.name.setText(facebookComment.getFrom().getName());
-        holder.message.setText(facebookComment.getMessage());
-        holder.date.setText(convertedDate(facebookComment.getCreatedTime()));
+        FirebaseComment firebaseComment = comments.get(position);
+        holder.name.setText(firebaseComment.getUserName());
+        holder.message.setText(firebaseComment.getComment());
+        holder.date.setText(firebaseComment.getTimeStamp());
+        if(firebaseComment.getUserImage()!=null && !firebaseComment.getUserImage().isEmpty()){
+            Picasso.with(context).load(firebaseComment.getUserImage()).stableKey(firebaseComment.getUserImage()).into(holder.userImage);
+        }
 
     }
 
@@ -64,11 +71,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
 
     public class CommentHolder extends RecyclerView.ViewHolder {
         TextView name,message,date;
+        ImageView userImage;
         public CommentHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.name);
             message = (TextView) itemView.findViewById(R.id.message);
             date = (TextView) itemView.findViewById(R.id.time);
+            userImage = (ImageView) itemView.findViewById(R.id.user_image);
         }
     }
 }
