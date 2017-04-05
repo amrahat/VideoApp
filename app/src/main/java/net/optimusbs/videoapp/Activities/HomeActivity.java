@@ -88,7 +88,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setUpToolbarAndDrawer() {
-        toolbar = SetUpToolbar.setup("Home", this);
+        toolbar = SetUpToolbar.setup(getString(R.string.app_name), this);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

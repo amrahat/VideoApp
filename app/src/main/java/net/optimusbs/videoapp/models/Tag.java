@@ -5,8 +5,10 @@ package net.optimusbs.videoapp.models;
  */
 
 public class Tag {
-    String tagName;
-    int videoCount;
+    private String tagName;
+    private int videoCount;
+    private long favouriteCount;
+    private boolean isFavouriteByCurrentUser;
 
     public Tag(String tagName, int videoCount) {
         this.tagName = tagName;
@@ -27,5 +29,21 @@ public class Tag {
 
     public void setVideoCount(int videoCount) {
         this.videoCount = videoCount;
+    }
+
+    public long getFavouriteCount() {
+        return favouriteCount;
+    }
+
+    public void setFavouriteCount(long favouriteCount) {
+        this.favouriteCount = favouriteCount;
+    }
+
+    public boolean isFavouriteByCurrentUser() {
+        return isFavouriteByCurrentUser;
+    }
+
+    public void setFavouriteByCurrentUser(boolean favouriteByCurrentUser) {
+        isFavouriteByCurrentUser = favouriteByCurrentUser;
     }
 }

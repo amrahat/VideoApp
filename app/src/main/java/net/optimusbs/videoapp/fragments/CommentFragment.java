@@ -151,15 +151,17 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                 if (!iterator.hasNext()) {
-                    onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments);
+                    onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments, "");
                     return;
                 }
+
+
 
                 while (iterator.hasNext()) {
 
                     final FirebaseComment firebaseComment = new FirebaseComment();
                     DataSnapshot commentSnapShot = iterator.next();
-                    String timestamp = String.valueOf((Long) commentSnapShot.child("timestamp").getValue());
+                    final String timestamp = String.valueOf((Long) commentSnapShot.child("timestamp").getValue());
                     firebaseComment.setTimeStamp(timestamp);
                     String userid = (String) commentSnapShot.child("profileid").getValue();
                     firebaseComment.setUserid(userid);
@@ -189,7 +191,22 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
 
                             if (!iterator.hasNext()) {
                                 Log.d(TAG, "onDataChange: " + firebaseComments.size());
-                                onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments);
+
+                                DatabaseReference timestampRef = firebaseDatabase.getReference("timestampref");
+                                timestampRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Long currentTimestamp = (Long) dataSnapshot.getValue();
+
+                                        onFirebaseCommentLoadListener.onFirebaseCommentLoad(firebaseComments,String.valueOf(currentTimestamp));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                timestampRef.setValue(ServerValue.TIMESTAMP);
                             }
                         }
 
@@ -349,8 +366,9 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     }
 
     @Override
-    public void onFirebaseCommentLoad(ArrayList<FirebaseComment> firebaseComments) {
+    public void onFirebaseCommentLoad(ArrayList<FirebaseComment> firebaseComments, String currentTimestamp) {
         comments.clear();
+        commentAdapter.setTimeStamp(currentTimestamp);
         comments.addAll(firebaseComments);
         commentAdapter.notifyDataSetChanged();
 

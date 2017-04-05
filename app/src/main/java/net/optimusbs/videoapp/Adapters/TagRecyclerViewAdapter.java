@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.joanzapata.iconify.widget.IconTextView;
+
+import net.optimusbs.videoapp.interfaces.OnTagFavoriteClickListener;
 import net.optimusbs.videoapp.models.Tag;
 import net.optimusbs.videoapp.fragments.VideosUnderTag;
 import net.optimusbs.videoapp.R;
@@ -28,12 +32,14 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
     String tag;
     FragmentManager fragmentManager;
     boolean fromSearch;
+    private OnTagFavoriteClickListener onTagFavoriteClickListener;
 
-    public TagRecyclerViewAdapter(ArrayList<Tag> tags, Activity activity, FragmentManager fragmentManager,boolean fromSearch) {
+    public TagRecyclerViewAdapter(ArrayList<Tag> tags, Activity activity, FragmentManager fragmentManager, boolean fromSearch, OnTagFavoriteClickListener onTagFavoriteClickListener) {
         this.tags = tags;
         this.activity = activity;
         this.fragmentManager = fragmentManager;
         this.fromSearch = fromSearch;
+        this.onTagFavoriteClickListener = onTagFavoriteClickListener;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
     }
 
     @Override
-    public void onBindViewHolder(final TagRecyclerViewAdapter.TagList holder, int position) {
+    public void onBindViewHolder(final TagRecyclerViewAdapter.TagList holder, final int position) {
         final Tag tag = tags.get(position);
         StringBuilder sb = new StringBuilder(tag.getTagName());
         sb.setCharAt(0,Character.toUpperCase(sb.charAt(0)));
@@ -59,6 +65,22 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
 
         }
 
+        holder.favouriteCount.setText(String.valueOf(tag.getFavouriteCount()));
+
+        if(tag.isFavouriteByCurrentUser()){
+            holder.addToFavTv.setText(activity.getString(R.string.icon_filled_star));
+        }else {
+            holder.addToFavTv.setText(activity.getString(R.string.icon_empty_star));
+
+        }
+
+        holder.addToFavTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            onTagFavoriteClickListener.onFavouriteIconClick(position);
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +94,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
 
                 fragmentManager.
                         beginTransaction().
-                        replace(R.id.container, videosUnderTag).
+                        add(R.id.container, videosUnderTag).
                         addToBackStack("specific_tag").
                         commit();
             }
@@ -80,6 +102,9 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
 
     }
 
+    private boolean isUserLoggedIn(){
+        return AccessToken.getCurrentAccessToken()!=null;
+    }
 
     @Override
     public int getItemCount() {
@@ -88,12 +113,15 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
 
     public static class TagList extends RecyclerView.ViewHolder {
 
-        TextView videoCount, tagName;
+        TextView videoCount, tagName,favouriteCount;
+        IconTextView addToFavTv;
 
         public TagList(View itemView) {
             super(itemView);
             videoCount = (TextView) itemView.findViewById(R.id.video_count);
             tagName = (TextView) itemView.findViewById(R.id.tag_name);
+            favouriteCount = (TextView) itemView.findViewById(R.id.favourite_count);
+            addToFavTv = (IconTextView) itemView.findViewById(R.id.add_to_favourite_icon);
 
         }
     }

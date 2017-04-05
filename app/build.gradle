@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "net.optimusbs.videoapp"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -45,6 +45,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.github.fiskurgit:ChipCloud:3.0.3'
+    compile 'com.google.android:flexbox:0.3.0-alpha3'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

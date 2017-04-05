@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.optimusbs.videoapp.R;
-import net.optimusbs.videoapp.facebookmodels.FacebookComment;
 import net.optimusbs.videoapp.models.FirebaseComment;
 
 import java.text.ParseException;
@@ -27,6 +26,7 @@ import java.util.Locale;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentHolder> {
     private ArrayList<FirebaseComment> comments;
     private Context context;
+    private String currentTimeStamp;
 
     public CommentAdapter(ArrayList<FirebaseComment> comments, Context context) {
         this.comments = comments;
@@ -35,7 +35,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
 
     @Override
     public CommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.comment_item,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
         return new CommentHolder(view);
     }
 
@@ -44,17 +44,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
         FirebaseComment firebaseComment = comments.get(position);
         holder.name.setText(firebaseComment.getUserName());
         holder.message.setText(firebaseComment.getComment());
-        holder.date.setText(firebaseComment.getTimeStamp());
-        if(firebaseComment.getUserImage()!=null && !firebaseComment.getUserImage().isEmpty()){
+        holder.date.setText(getDifferenceText(currentTimeStamp, firebaseComment.getTimeStamp()));
+        if (firebaseComment.getUserImage() != null && !firebaseComment.getUserImage().isEmpty()) {
             Picasso.with(context).load(firebaseComment.getUserImage()).stableKey(firebaseComment.getUserImage()).into(holder.userImage);
         }
 
     }
 
-    private String convertedDate(String inputStr){
+    private String convertedDate(String inputStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
         try {
-            Long timestamp =  dateFormat.parse(inputStr).getTime();
+            Long timestamp = dateFormat.parse(inputStr).getTime();
             Date d = new Date(timestamp);
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm a");
             return sdf.format(d);
@@ -64,14 +64,53 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
         return "";
     }
 
+    private String getDifferenceText(String currentTimeStamp, String commentTimeStamp) {
+        try {
+            Long difference = Long.parseLong(currentTimeStamp) - Long.parseLong(commentTimeStamp);
+
+            int differenceInSec = Integer.parseInt(String.valueOf(difference))/1000;
+            String message = "";
+            //int differenceInSec = difference/1000;
+            //Log.d("differenceInSec",differenceInSec+","+difference);
+            if (differenceInSec < 60) { //1min
+                message = "Just Now";
+            } else if (differenceInSec < 3600) { //1hr
+                int diffInMin = differenceInSec / 60;
+                message = diffInMin + "min ago";
+            } else if (differenceInSec < 86400) { //1day 60*24
+                int diffInHour = differenceInSec / 3600;
+                message = diffInHour + "h ago";
+            } else if (differenceInSec < (86400 * 30)) { //1week
+                int diffInDay = differenceInSec / 86400;
+                message = diffInDay + "d ago";
+            } else if (differenceInSec < (86400 * 30 * 12)) {
+                int diffInMonth = differenceInSec / (86400 * 30);
+                message = diffInMonth + "m ago";
+            } else {
+                int diffInYear = differenceInSec / (86400 * 30 * 12);
+                message = diffInYear + "y ago";
+            }
+            return message;
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+    }
+
+
     @Override
     public int getItemCount() {
         return comments.size();
     }
 
+    public void setTimeStamp(String currentTimestamp) {
+        this.currentTimeStamp = currentTimestamp;
+    }
+
     public class CommentHolder extends RecyclerView.ViewHolder {
-        TextView name,message,date;
+        TextView name, message, date;
         ImageView userImage;
+
         public CommentHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.name);

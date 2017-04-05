@@ -31,6 +31,7 @@ public class Constants {
     public static String VIDEO_DESCRIPTION = "description";
     public static String FAVOURITE_REF = "fav_videos";
     public static String COMMENT_REF = "comments";
+    public static String FAVOURITE_TAG_REF = "fav_tag";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +
             "&part=contentDetails,snippet,,statistics,status";

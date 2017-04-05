@@ -11,19 +11,31 @@ import com.google.gson.Gson;
  */
 
 public class FireBaseClass {
+    private final DatabaseReference favouriteVidRef;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference homeBannerRef, tagRef,videoRef;
     private String baseUrl = "https://videoapp-32254.firebaseio.com/";
     Context context;
     Gson gson;
+    private DatabaseReference favouriteTagRef;
+
     public FireBaseClass(Context context) {
         firebaseDatabase = FirebaseDatabase.getInstance();
         homeBannerRef = firebaseDatabase.getReference(Constants.HOME_BANNER_REF);
         tagRef = firebaseDatabase.getReference(Constants.TAG_REF);
         videoRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
+        favouriteVidRef = firebaseDatabase.getReference(Constants.FAVOURITE_REF);
+        favouriteTagRef = firebaseDatabase.getReference(Constants.FAVOURITE_TAG_REF);
         this.context = context;
         gson = new Gson();
 
+    }
+
+    public DatabaseReference getFavouriteVidRef() {
+        return favouriteVidRef;
+    }
+    public DatabaseReference getFavouriteTagRef() {
+        return favouriteTagRef;
     }
 
     public void addVideoToDatabase(String videoId){

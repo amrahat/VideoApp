@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 
 public interface OnFirebaseCommentLoadListener {
-    void onFirebaseCommentLoad(ArrayList<FirebaseComment> firebaseComments);
+    void onFirebaseCommentLoad(ArrayList<FirebaseComment> firebaseComments, String currentTimestamp);
 }

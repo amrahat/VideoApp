@@ -35,4 +35,6 @@
     <string name="play_video">Play Video</string>
     <string name="comments">Comments</string>
     <string name="icon_video">{fa-video-camera}</string>
+    <string name="see_more_ggs">... see more</string>
+    <string name="see_less_ggs">see less</string>
 </resources>

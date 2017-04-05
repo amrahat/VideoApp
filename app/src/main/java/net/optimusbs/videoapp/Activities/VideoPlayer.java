@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -33,6 +35,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
+import net.optimusbs.videoapp.UtilityClasses.TagLayoutContainer;
 import net.optimusbs.videoapp.UtilityClasses.UtilsMethod;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
@@ -46,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
@@ -78,8 +82,8 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     TextView likeCountFb;
     YouTubePlayer mYouTubePlayer;
 
-    @InjectView(R.id.indicator_description_visibility)
-    IconTextView indicatorDescription;
+    /*@InjectView(R.id.indicator_description_visibility)
+    IconTextView indicatorDescription;*/
 
     @InjectView(R.id.titleLayout)
     RelativeLayout titleLayout;
@@ -97,6 +101,9 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
     IconTextView share;
     @InjectView(R.id.favourite)
     IconTextView favourite;
+
+    @InjectView(R.id.tag_layout)
+    TagLayoutContainer tagContainer;
 
     @InjectView(R.id.comment_count_facebook)
     TextView commentCountFb;
@@ -424,6 +431,10 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             }
             String commentCount = statisticsObject.getString("commentCount");
 
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            ArrayList<String> tagsList = new Gson().fromJson(snippetObject.getJSONArray("tags").toString(), type);
+            showTagsInTagContainer(tagsList);
 
             Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount, thumbnail);
 
@@ -434,11 +445,16 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
     }
 
+    private void showTagsInTagContainer(ArrayList<String> tagsList) {
+        tagContainer.addTags(this, tagsList);
+    }
+
     private void setUpViews(Video video) {
         title.setText(video.getTitle());
         description.setText(video.getDescription());
+        UtilsMethod.makeTextViewResizable(description,2,getString(R.string.see_more_ggs),true,getApplicationContext());
 
-        titleLayout.setOnClickListener(new View.OnClickListener() {
+        /*titleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (description_layout_visible) {
@@ -452,7 +468,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
 
                 }
             }
-        });
+        });*/
 
         viewCount.setText(video.getViewCount());
         likeCount.setText(video.getLikeCount());
@@ -601,6 +617,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                 favVideoDbRef.child(videoId).child(loggedInUserId).removeValue();
                 // userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).removeValue();
                 videoDb.child(videoId).child(Constants.USER_WHO_FAVOURITE).child(loggedInUserId).removeValue();
+                userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).removeValue();
                 favourite.setTextColor(iconSelectedColor);
                 favourite.setText(nonFavouriteIcon);
                 isFavouriteByCurrentUser = false;
@@ -608,6 +625,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                 favVideoDbRef.child(videoId).child(loggedInUserId).setValue(ServerValue.TIMESTAMP);
                 //userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).setValue(1);
                 videoDb.child(videoId).child(Constants.USER_WHO_FAVOURITE).child(loggedInUserId).setValue(UtilsMethod.getCurrentTimeStamp());
+                userDb.child(loggedInUserId).child(Constants.FAVOURITE).child(videoId).setValue(ServerValue.TIMESTAMP);
 
                 favourite.setTextColor(iconSelectedColor);
                 favourite.setText(favouriteIcon);

@@ -55,11 +55,21 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
     DatabaseReference userDb;
     private DatabaseReference videoRef;
     private ProfileTracker mProfileTracker;
+    private ValueEventListener myFavVideoValueEventListener;
+    private DatabaseReference databaseReference;
 
     public MyVideosFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onPause() {
+        if (databaseReference != null && myFavVideoValueEventListener != null) {
+            databaseReference.removeEventListener(myFavVideoValueEventListener);
+        }
+        super.onPause();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,12 +108,12 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
     private void getFavVideos(Profile profile) {
         if (profile != null) {
             String loggedInUserId = Profile.getCurrentProfile().getId();
-            FirebaseDatabase.getInstance().getReference(Constants.USERDB).child(loggedInUserId).child(Constants.FAVOURITE).addValueEventListener(new ValueEventListener() {
+            myFavVideoValueEventListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                     final ArrayList<Video> videos = new ArrayList<Video>();
-                    if(!iterator.hasNext()){
+                    if (!iterator.hasNext()) {
                         Toast.makeText(getContext(), "No data found", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -136,7 +146,9 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
+            };
+            databaseReference = FirebaseDatabase.getInstance().getReference(Constants.USERDB).child(loggedInUserId).child(Constants.FAVOURITE);
+            databaseReference.addValueEventListener(myFavVideoValueEventListener);
         } else {
             Log.d("here", "here");
             notLoggedInLayout.setVisibility(View.VISIBLE);
@@ -180,12 +192,12 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
     @Override
     public void onSuccess(LoginResult loginResult) {
 
-        if(Profile.getCurrentProfile() == null) {
+        if (Profile.getCurrentProfile() == null) {
             mProfileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                     // profile2 is the new profile
-                    Log.d("facebook", profile2.getFirstName()+"asled");
+                    Log.d("facebook", profile2.getFirstName() + "asled");
                     mProfileTracker.stopTracking();
                     setProfileValueInFirebase(profile2);
                     getFavVideos(profile2);
@@ -194,8 +206,7 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
             };
             // no need to call startTracking() on mProfileTracker
             // because it is called by its constructor, internally.
-        }
-        else {
+        } else {
             Profile profile = Profile.getCurrentProfile();
             Log.d("facebook", profile.getFirstName());
             Log.d("idaslkdfjal", profile.getFirstName() + AccessToken.getCurrentAccessToken().getToken());

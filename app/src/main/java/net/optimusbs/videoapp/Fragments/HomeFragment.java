@@ -37,7 +37,7 @@ import java.util.Iterator;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     LinearLayout bannerContainer;
     LinearLayout indicatorLayout;
     LinearLayout container2;
@@ -55,6 +55,10 @@ public class HomeFragment extends Fragment {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference homeBannerRef, tagRef, homeCategoryRef, videoListRef;
+    private ValueEventListener homeCategoryRefValueEventListener;
+    private ValueEventListener homeBannerRefValueEventListener;
+    private LinearLayout viewAllLayout;
+    private TextView tagVideoCount;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -83,7 +87,7 @@ public class HomeFragment extends Fragment {
         setOtherTagVideo();
         GetHashCode.printHashCode(getContext());
 
-        SetUpToolbar.setTitle("Home", getActivity());
+        SetUpToolbar.setTitle(getString(R.string.app_name), getActivity());
         return view;
     }
 
@@ -117,6 +121,8 @@ public class HomeFragment extends Fragment {
         indicatorLayout = (LinearLayout) view.findViewById(R.id.indicator_layout);
         container2 = (LinearLayout) view.findViewById(R.id.container2);
         tagName = (TextView) view.findViewById(R.id.tagName);
+        tagVideoCount = (TextView) view.findViewById(R.id.count);
+        viewAllLayout = (LinearLayout) view.findViewById(R.id.view_all_videos);
     }
 
     private void initializeOnSwipeInterface() {
@@ -160,6 +166,29 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
+                int totalCount = videoList.size();
+                if (totalCount < 20) {
+                    tagVideoCount.setText(totalCount + " videos");
+
+                } else {
+                    tagVideoCount.setText("20+ videos");
+                }
+
+                viewAllLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        VideosUnderTag videosUnderTag = new VideosUnderTag();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("tag_name", firstTag);
+                        videosUnderTag.setArguments(bundle);
+
+                        getFragmentManager().
+                                beginTransaction().
+                                replace(R.id.container, videosUnderTag).
+                                addToBackStack("specific_tag").
+                                commit();
+                    }
+                });
                 populateHomeBanner(videoList, leftToRight, firstTag);
             }
 
@@ -227,7 +256,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void setOtherTagVideo() {
-        homeCategoryRef.addValueEventListener(new ValueEventListener() {
+        homeCategoryRefValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
@@ -274,9 +303,17 @@ public class HomeFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        homeCategoryRef.addValueEventListener(homeCategoryRefValueEventListener);
 
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        homeCategoryRef.removeEventListener(homeCategoryRefValueEventListener);
+        homeBannerRef.removeEventListener(homeBannerRefValueEventListener);
     }
 
     private void initializeFireBaseDatabase() {
@@ -310,7 +347,7 @@ public class HomeFragment extends Fragment {
 
     private void getHomeBannerData() {
         homeBannerTag = new ArrayList<>();
-        homeBannerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        homeBannerRefValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
@@ -333,24 +370,28 @@ public class HomeFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        homeBannerRef.addListenerForSingleValueEvent(homeBannerRefValueEventListener);
     }
 
     private void setIndicator(int size) {
         indicators = new IconTextView[size];
         int padding = 5;
-        for (int i = 0; i < size; i++) {
-            IconTextView iconTextView = new IconTextView(getActivity());
-            iconTextView.setText("{fa-circle}");
-            iconTextView.setTextSize(indicatorSmallSize);
-            iconTextView.setTextColor(indicatorSmallColor);
-            iconTextView.setPadding(padding, padding, padding, padding);
-            indicators[i] = iconTextView;
-            indicatorLayout.addView(iconTextView);
+        if(getActivity()!=null) {
+            for (int i = 0; i < size; i++) {
+                IconTextView iconTextView = new IconTextView(getActivity());
+                iconTextView.setText("{fa-circle}");
+                iconTextView.setTextSize(indicatorSmallSize);
+                iconTextView.setTextColor(indicatorSmallColor);
+                iconTextView.setPadding(padding, padding, padding, padding);
+                indicators[i] = iconTextView;
+                indicatorLayout.addView(iconTextView);
+            }
+            indicators[0].setTextSize(indicatorLargeSize);
+            indicators[0].setTextColor(indicatorLargeColor);
         }
 
-        indicators[0].setTextSize(indicatorLargeSize);
-        indicators[0].setTextColor(indicatorLargeColor);
+
     }
 
     private void populateHomeBanner(ArrayList<String> videoId, final boolean leftToRight, String tag) {
@@ -388,6 +429,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }
 
 
