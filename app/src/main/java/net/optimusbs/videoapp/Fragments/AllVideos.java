@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
 import net.optimusbs.videoapp.models.Video;
@@ -34,6 +35,7 @@ public class AllVideos extends Fragment {
     RecyclerView recyclerView;
     int indicatorSmallColor;
     int indicatorLargeColor;
+    private FireBaseClass fireBaseClass;
 
     public AllVideos() {
         // Required empty public constructor
@@ -53,27 +55,57 @@ public class AllVideos extends Fragment {
     }
 
     private void getAllVideos() {
+        fireBaseClass = new FireBaseClass(getContext());
             FirebaseDatabase.getInstance().getReference(Constants.VIDEO_REF).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     GenericTypeIndicator<ArrayList<Video>> t = new GenericTypeIndicator<ArrayList<Video>>() {};
-                    ArrayList<Video> videoList = new ArrayList<Video>();
+                    final ArrayList<Video> videoList = new ArrayList<Video>();
 
 
-                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                    final Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                     //ArrayList<String> videoIds = new ArrayList<String>();
                     while (iterator.hasNext()) {
                         DataSnapshot snapshot = iterator.next();
-                        Video video = snapshot.getValue(Video.class);
+                        final Video video = snapshot.getValue(Video.class);
                         video.setId(snapshot.getKey());
-                        videoList.add(video);
+
+                        fireBaseClass.getCommentRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                video.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
+
+                                fireBaseClass.getLikeRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        video.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                        videoList.add(video);
+
+                                        if(!iterator.hasNext()){
+                                            setUpRecyclerView(videoList);
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
                         //String videoId = snapshot.getKey();
                         //videoIds.add(videoId);
                     }
-                    if(videoList.size()!=0){
-                        setUpRecyclerView(videoList);
-                    }
+                    /*if(videoList.size()!=0){
+                    }*/
                 }
 
                 @Override

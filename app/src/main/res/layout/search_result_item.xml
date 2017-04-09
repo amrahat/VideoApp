@@ -1,23 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="3dp">
+    <!--android:layout_width="@dimen/video_list_by_tag_height"
+            android:layout_height="@dimen/video_list_by_tag_height"-->
+    <ImageView
+        android:id="@+id/video_thumbnail"
+
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/user_placeholder" />
 
 
-    <com.joanzapata.iconify.widget.IconTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/type"
-        android:text="20sp"
-        android:paddingRight="5dp"
-        android:textColor="@color/toolbar_color"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:textColor="#000000"
-        android:id="@+id/title"
-        android:textSize="15sp"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="20sp"
+                android:textColor="@color/toolbar_color"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/tag_fav_count_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:padding="5dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/favcount"
+                    android:text=""
+                    android:textColor="@color/toolbar_color"
+                    android:paddingRight="3dp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/toolbar_color"
+                    android:layout_height="wrap_content"
+                    android:text="people added as favourite"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/video_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/video_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/viewcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" views" />
+        </LinearLayout>
+    </LinearLayout>
+
+
 </LinearLayout>

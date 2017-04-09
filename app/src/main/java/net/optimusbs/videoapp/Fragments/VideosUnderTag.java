@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.ItemDecoration;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
@@ -32,6 +33,7 @@ public class VideosUnderTag extends Fragment {
     String tagName;
     TextView tagCount;
     private DatabaseReference videoListRef;
+    private FireBaseClass fireBaseClass;
 
     public VideosUnderTag() {
     }
@@ -50,6 +52,7 @@ public class VideosUnderTag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_videos_under_tag, container, false);
         initializeView(view);
+        fireBaseClass = new FireBaseClass(getContext());
         videoListRef = FirebaseDatabase.getInstance().getReference(Constants.VIDEO_REF);
         getArgumentData();
         return view;
@@ -85,19 +88,45 @@ public class VideosUnderTag extends Fragment {
                     videoListRef.child(videoList.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            Video video = dataSnapshot.getValue(Video.class);
+                            final Video video = dataSnapshot.getValue(Video.class);
                             if (video != null) {
                                 video.setId(videoList.get(finalI));
-                                videos.add(video);
+                                fireBaseClass.getCommentRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        video.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
+
+                                        fireBaseClass.getLikeRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                video.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                                videos.add(video);
+
+                                                if (finalI == videoList.size() - 1) {
+                                                    //setadapter
+                                                    tagCount.setText(videos.size() + " videos found for " + tagName);
+
+                                                    VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getActivity(), tag);
+                                                    recyclerView.setAdapter(videoListByTagAdapter);
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
 
-                            if (finalI == videoList.size() - 1) {
-                                //setadapter
-                                tagCount.setText(videos.size() + " videos found for " + tagName);
 
-                                VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getActivity(), tag);
-                                recyclerView.setAdapter(videoListByTagAdapter);
-                            }
                         }
 
                         @Override

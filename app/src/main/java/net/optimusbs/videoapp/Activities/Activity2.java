@@ -4,6 +4,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -73,6 +74,10 @@ public class Activity2 extends AppCompatActivity {
                         setCustomAnimations(R.anim.enter_from_left,R.anim.exit_to_right).
                         add(R.id.container, new Search()).
                         commit();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setHomeButtonEnabled(true);
+
                 //SetUpToolbar.setTitle("Search",this);
                 showSearchEditText();
                 break;
@@ -97,6 +102,7 @@ public class Activity2 extends AppCompatActivity {
                         commit();
                 //SetUpToolbar.setTitle("Search",this);
                 hideSearchEditText();
+
                 break;
         }
     }
@@ -120,16 +126,25 @@ public class Activity2 extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setUpToolbarAndDrawer() {
         toolbar = SetUpToolbar.setup("", this);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerFragment =
                 (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        drawerFragment.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, toolbar);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, mDrawerLayout, toolbar);*/
     }
 
     public void showUserLayout(){

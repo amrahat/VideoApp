@@ -225,17 +225,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     videoListRef.child(sizedVideoList.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            Video video = dataSnapshot.getValue(Video.class);
+                            final Video video = dataSnapshot.getValue(Video.class);
                             if (video != null) {
                                 video.setId(sizedVideoList.get(finalI));
-                                videos.add(video);
+                                fireBaseClass.getCommentRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        video.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
+
+                                        fireBaseClass.getLikeRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                video.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                                videos.add(video);
+
+                                                if (finalI == sizedVideoList.size() - 1) {
+                                                    //setadapter
+                                                    VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getActivity(), tag);
+                                                    recyclerView.setAdapter(videoListByTagAdapter);
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
 
-                            if (finalI == sizedVideoList.size() - 1) {
-                                //setadapter
-                                VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getActivity(), tag);
-                                recyclerView.setAdapter(videoListByTagAdapter);
-                            }
+
                         }
 
                         @Override

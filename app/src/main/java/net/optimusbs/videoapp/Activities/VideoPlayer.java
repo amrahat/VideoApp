@@ -415,21 +415,25 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             JSONObject jsonObject = new JSONObject(result);
             JSONObject itemsObject = jsonObject.getJSONArray("items").getJSONObject(0);
             JSONObject snippetObject = itemsObject.getJSONObject("snippet");
-            JSONObject statisticsObject = itemsObject.getJSONObject("statistics");
             String videoId = itemsObject.getString("id");
             String thumbnail = snippetObject.getJSONObject("thumbnails").getJSONObject("default").getString("url");
             String publishedAt = snippetObject.getString("publishedAt");
             String title = snippetObject.getString("title");
             String description = snippetObject.getString("description");
-            String viewCount = statisticsObject.getString("viewCount");
+            String viewCount="",likeCount="",commentCount="";
+            if(itemsObject.has("statistics")){
+                JSONObject statisticsObject = itemsObject.getJSONObject("statistics");
+                viewCount = statisticsObject.getString("viewCount");
 
-            String likeCount;
-            if (statisticsObject.has("likeCount")) {
-                likeCount = statisticsObject.getString("likeCount");
-            } else {
-                likeCount = "0";
+                if (statisticsObject.has("likeCount")) {
+                    likeCount = statisticsObject.getString("likeCount");
+                } else {
+                    likeCount = "0";
+                }
+                commentCount = statisticsObject.getString("commentCount");
             }
-            String commentCount = statisticsObject.getString("commentCount");
+
+
 
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();

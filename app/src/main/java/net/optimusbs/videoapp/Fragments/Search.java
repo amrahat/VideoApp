@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +27,7 @@ import com.google.gson.Gson;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 import net.optimusbs.videoapp.adapters.SearchResultAdapter;
 import net.optimusbs.videoapp.adapters.SearchYoutubeVideoRecyclerView;
@@ -40,6 +43,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static android.R.attr.tag;
+import static net.optimusbs.videoapp.R.id.tagName;
+import static net.optimusbs.videoapp.R.id.tags;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -52,7 +59,8 @@ public class Search extends Fragment {
     String nextPageToken;
     SearchYoutubeVideoRecyclerView searchYoutubeVideoRecyclerView;
     ArrayList<Video> videos;
-    private DatabaseReference searchRef;
+    private DatabaseReference searchRef,videosRef;
+    private FireBaseClass fireBaseClass;
 
     public Search() {
         // Required empty public constructor
@@ -79,7 +87,9 @@ public class Search extends Fragment {
     private void initializeFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         tagsRef = firebaseDatabase.getReference(Constants.TAG_REF);
+        videosRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
         searchRef = firebaseDatabase.getReference(Constants.SEARCH_REF);
+        fireBaseClass = new FireBaseClass(getContext());
 
     }
 
@@ -141,31 +151,84 @@ public class Search extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount() > 0) {
-                    Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+                    final Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
                     while (iterator.hasNext()) {
                         DataSnapshot snapshot = iterator.next();
-                        SearchResult searchResult = new SearchResult();
+                        final SearchResult searchResult = new SearchResult();
                         String id = snapshot.getKey();
                         searchResult.setId(id);
                         searchResult.setTitle(snapshot.child("original_value").getValue().toString());
                         searchResult.setIsTag(isInt(id));
 
-                       // Log.d("search_result", "onDataChange: "+new Gson().toJson(searchResult));
+                        if(!searchResult.isTag()){
+                            videosRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    searchResult.setThumbnail(String.valueOf(dataSnapshot.child(Constants.VIDEO_THUMBNAIL).getValue()));
+                                    searchResult.setViewCount(String.valueOf(dataSnapshot.child(Constants.VIEW_COUNT).getValue()));
+                                    searchResults.add(searchResult);
 
-                        searchResults.add(searchResult);
+                                    if(!iterator.hasNext()){
+                                        SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
+                                        tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
+                                    }
+                                }
 
-                       /* String tagName = snapshot.getKey();
-                        int videoCount = (int) snapshot.getChildrenCount();
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                        Tag tag = new Tag(tagName, videoCount);
-                        tags.add(tag);
-*/
+                                }
+                            });
+                        }else {
+                            tagsRef.child(searchResult.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    searchResult.setThumbnail("");
+                                    searchResult.setTagVideoCount(dataSnapshot.getChildrenCount());
+
+
+                                    fireBaseClass.getFavouriteTagRef().child(searchResult.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            searchResult.setFavouriteCount(dataSnapshot.getChildrenCount());
+                                            if (isUserLoggedIn()) {
+                                                String profileId = Profile.getCurrentProfile().getId();
+                                                searchResult.setFavouriteByCurrentUser(dataSnapshot.hasChild(profileId));
+                                            } else {
+                                                searchResult.setFavouriteByCurrentUser(false);
+                                            }
+
+                                            searchResults.add(searchResult);
+
+                                            if(!iterator.hasNext()){
+                                                SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
+                                                tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
                     }
 
 
                     loadMore.setVisibility(View.GONE);
-                    SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
-                    tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
+
                     tagRecyclerView.setVisibility(View.VISIBLE);
                     searchYouTubeRecyclerView.setVisibility(View.GONE);
 
@@ -184,6 +247,10 @@ public class Search extends Fragment {
         });
     }
 
+
+    private boolean isUserLoggedIn() {
+        return AccessToken.getCurrentAccessToken() != null;
+    }
     private boolean isInt(String id) {
         try {
             int intId = Integer.parseInt(id);

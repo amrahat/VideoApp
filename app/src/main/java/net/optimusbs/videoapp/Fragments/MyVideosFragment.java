@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
+import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
 import net.optimusbs.videoapp.models.Video;
@@ -57,6 +58,7 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
     private ProfileTracker mProfileTracker;
     private ValueEventListener myFavVideoValueEventListener;
     private DatabaseReference databaseReference;
+    private FireBaseClass fireBaseClass;
 
     public MyVideosFragment() {
         // Required empty public constructor
@@ -103,6 +105,7 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
         firebaseDatabase = FirebaseDatabase.getInstance();
         userDb = firebaseDatabase.getReference(Constants.USERDB);
         videoRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
+        fireBaseClass = new FireBaseClass(getContext());
     }
 
     private void getFavVideos(Profile profile) {
@@ -123,13 +126,39 @@ public class MyVideosFragment extends Fragment implements FacebookCallback<Login
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                Video video = dataSnapshot.getValue(Video.class);
+                                final Video video = dataSnapshot.getValue(Video.class);
                                 video.setId(dataSnapshot.getKey());
-                                videos.add(video);
-                                if (!iterator.hasNext()) {
-                                    setUpRecyclerView(videos);
+                                fireBaseClass.getCommentRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        video.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
 
-                                }
+                                        fireBaseClass.getLikeRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                video.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                                videos.add(video);
+
+                                                if (!iterator.hasNext()) {
+                                                    setUpRecyclerView(videos);
+
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
                             }
 
                             @Override

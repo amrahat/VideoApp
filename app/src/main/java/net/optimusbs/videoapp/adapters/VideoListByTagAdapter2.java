@@ -59,6 +59,19 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
             holder.viewCountLayout.setVisibility(View.VISIBLE);
             holder.viewCount.setText(video.getViewCount());
         }
+
+        if(video.getCommentCount()==null){
+        }else {
+            holder.commentCount.setText(video.getCommentCount());
+
+        }
+
+        if(video.getLikeCount()==null){
+
+        }else {
+            holder.likeCount.setText(video.getLikeCount());
+
+        }
         Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumbnail);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,77 +87,9 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
             }
         });
 
-        /*String url = Constants.getDataUrl(videoId);
-        Log.d("url", url);
-        VolleyRequest.sendRequestGet(context, url, new VolleyRequest.VolleyCallback() {
-            @Override
-            public void onSuccess(String result) {
-                //Log.d("result", result);
-                final Video video = parseJson(result);
-                if (video != null) {
-                    holder.title.setText(video.getTitle());
-                    holder.viewCount.setText(video.getViewCount());
-                    // holder.likeCount.setText(video.getLikeCount());
-                    //holder.commentCount.setText(video.getCommentCount());
-                    Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumbnail);
-
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, VideoPlayer.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("video", video);
-                            bundle.putString("tag", tag);
-
-                            intent.putExtra("bundle", bundle);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                        }
-                    });
-
-                    fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_TITLE, video.getTitle());
-                    fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_THUMBNAIL, video.getThumbnail());
-                    fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_DESCRIPTION, video.getDescription());
-
-                }
-            }
-        });*/
-
-
-        //
 
     }
 
-    private Video parseJson(String result) {
-        try {
-            JSONObject jsonObject = new JSONObject(result);
-            JSONObject itemsObject = jsonObject.getJSONArray("items").getJSONObject(0);
-            JSONObject snippetObject = itemsObject.getJSONObject("snippet");
-            JSONObject statisticsObject = itemsObject.getJSONObject("statistics");
-            String videoId = itemsObject.getString("id");
-            String thumbnail = snippetObject.getJSONObject("thumbnails").getJSONObject("default").getString("url");
-            String publishedAt = snippetObject.getString("publishedAt");
-            String title = snippetObject.getString("title");
-            String description = snippetObject.getString("description");
-            String viewCount = statisticsObject.getString("viewCount");
-            String likeCount;
-            if (statisticsObject.has("likeCount")) {
-                likeCount = statisticsObject.getString("likeCount");
-            } else {
-                likeCount = "0";
-            }
-            String commentCount = statisticsObject.getString("commentCount");
-
-
-            Video video = new Video(videoId, title, description, publishedAt, viewCount, likeCount, commentCount, thumbnail);
-            return video;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
 
     @Override
     public int getItemCount() {
@@ -155,7 +100,7 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
 
         private final LinearLayout viewCountLayout;
         ImageView thumbnail;
-        TextView title, viewCount/*,likeCount,commentCount*/;
+        TextView title, viewCount,likeCount,commentCount;
 
         public VideoList(View itemView) {
             super(itemView);
@@ -163,8 +108,8 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
             title = (TextView) itemView.findViewById(R.id.title);
             viewCount = (TextView) itemView.findViewById(R.id.viewCount);
             viewCountLayout = (LinearLayout) itemView.findViewById(R.id.view_count_layout);
-            //likeCount = (TextView) itemView.findViewById(R.id.likeCount);
-            //commentCount = (TextView) itemView.findViewById(R.id.commentCount);
+            likeCount = (TextView) itemView.findViewById(R.id.likeCount);
+            commentCount = (TextView) itemView.findViewById(R.id.commentCount);
         }
     }
 }

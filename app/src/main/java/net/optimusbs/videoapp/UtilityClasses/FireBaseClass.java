@@ -17,7 +17,7 @@ public class FireBaseClass {
     private String baseUrl = "https://videoapp-32254.firebaseio.com/";
     Context context;
     Gson gson;
-    private DatabaseReference favouriteTagRef;
+    private DatabaseReference favouriteTagRef,commentRef,likeRef;
 
     public FireBaseClass(Context context) {
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -26,6 +26,8 @@ public class FireBaseClass {
         videoRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
         favouriteVidRef = firebaseDatabase.getReference(Constants.FAVOURITE_REF);
         favouriteTagRef = firebaseDatabase.getReference(Constants.FAVOURITE_TAG_REF);
+        commentRef = firebaseDatabase.getReference(Constants.COMMENT_REF);
+        likeRef = firebaseDatabase.getReference(Constants.LIKE_REF);
         this.context = context;
         gson = new Gson();
 
@@ -44,5 +46,21 @@ public class FireBaseClass {
 
     public void addVideoToDatabase(String videoId, String key,String value){
         videoRef.child(videoId).child(key).setValue(value);
+    }
+
+    public DatabaseReference getCommentRef() {
+        return commentRef;
+    }
+
+    public void setCommentRef(DatabaseReference commentRef) {
+        this.commentRef = commentRef;
+    }
+
+    public DatabaseReference getLikeRef() {
+        return likeRef;
+    }
+
+    public void setLikeRef(DatabaseReference likeRef) {
+        this.likeRef = likeRef;
     }
 }
