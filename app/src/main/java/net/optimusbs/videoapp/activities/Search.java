@@ -1,17 +1,20 @@
-package net.optimusbs.videoapp.fragments;
+package net.optimusbs.videoapp.activities;
 
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,17 +26,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
+import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.UtilityClasses.VolleyRequest;
 import net.optimusbs.videoapp.adapters.SearchResultAdapter;
 import net.optimusbs.videoapp.adapters.SearchYoutubeVideoRecyclerView;
-import net.optimusbs.videoapp.adapters.TagRecyclerViewAdapter;
+import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
 import net.optimusbs.videoapp.models.SearchResult;
-import net.optimusbs.videoapp.models.Tag;
 import net.optimusbs.videoapp.models.Video;
 
 import org.json.JSONArray;
@@ -43,14 +46,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static android.R.attr.tag;
-import static net.optimusbs.videoapp.R.id.tagName;
-import static net.optimusbs.videoapp.R.id.tags;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Search extends Fragment {
+public class Search extends AppCompatActivity implements View.OnClickListener {
     EditText searchEditText;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference tagsRef;
@@ -61,53 +63,76 @@ public class Search extends Fragment {
     ArrayList<Video> videos;
     private DatabaseReference searchRef,videosRef;
     private FireBaseClass fireBaseClass;
+    private Toolbar toolbar;
 
-    public Search() {
-        // Required empty public constructor
-    }
+    @InjectView(R.id.back_button)
+    IconTextView backButton;
 
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_search);
+        ButterKnife.inject(this);
+        initializeView();
+        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.status_bar_color));
+        //setUpToolbarAndDrawer();
+        initializeFirebase();
+
+        backButton.setOnClickListener(this);
+    }
+
+
+
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         showSearchEditText();
-        initializeView(view);
-        initializeFirebase();
+
 
         return view;
-    }
+    }*/
 
-    private void showSearchEditText() {
+    /*private void showSearchEditText() {
         getActivity().findViewById(R.id.search_layout).setVisibility(View.VISIBLE);
         getActivity().findViewById(R.id.title_layout).setVisibility(View.GONE);
-    }
+    }*/
 
+
+    private void setUpToolbarAndDrawer() {
+        toolbar = SetUpToolbar.setupToolbarForSearch(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+    }
     private void initializeFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         tagsRef = firebaseDatabase.getReference(Constants.TAG_REF);
         videosRef = firebaseDatabase.getReference(Constants.VIDEO_REF);
         searchRef = firebaseDatabase.getReference(Constants.SEARCH_REF);
-        fireBaseClass = new FireBaseClass(getContext());
+        fireBaseClass = new FireBaseClass(this);
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        showSearchEditText();
+       // showSearchEditText();
     }
 
-    private void initializeView(View view) {
-        searchEditText = (EditText) getActivity().findViewById(R.id.search_edittext);
-        tagRecyclerView = (RecyclerView) view.findViewById(R.id.search_recycler_view);
-        searchYouTubeRecyclerView = (RecyclerView) view.findViewById(R.id.search_youtube_video_recycler_view);
-        loadMore = (Button) view.findViewById(R.id.load_more);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+    private void initializeView() {
+        searchEditText = (EditText) findViewById(R.id.search_edittext);
+        tagRecyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);
+        searchYouTubeRecyclerView = (RecyclerView) findViewById(R.id.search_youtube_video_recycler_view);
+        loadMore = (Button) findViewById(R.id.load_more);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         tagRecyclerView.setLayoutManager(mLayoutManager);
         tagRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this);
 
         searchYouTubeRecyclerView.setLayoutManager(mLayoutManager2);
         searchYouTubeRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -155,7 +180,7 @@ public class Search extends Fragment {
                     while (iterator.hasNext()) {
                         DataSnapshot snapshot = iterator.next();
                         final SearchResult searchResult = new SearchResult();
-                        String id = snapshot.getKey();
+                        final String id = snapshot.getKey();
                         searchResult.setId(id);
                         searchResult.setTitle(snapshot.child("original_value").getValue().toString());
                         searchResult.setIsTag(isInt(id));
@@ -166,12 +191,40 @@ public class Search extends Fragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     searchResult.setThumbnail(String.valueOf(dataSnapshot.child(Constants.VIDEO_THUMBNAIL).getValue()));
                                     searchResult.setViewCount(String.valueOf(dataSnapshot.child(Constants.VIEW_COUNT).getValue()));
-                                    searchResults.add(searchResult);
 
-                                    if(!iterator.hasNext()){
-                                        SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
-                                        tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
-                                    }
+                                    fireBaseClass.getCommentRef().child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            searchResult.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
+
+                                            fireBaseClass.getLikeRef().child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    searchResult.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                                    searchResults.add(searchResult);
+
+                                                    if(!iterator.hasNext()){
+                                                        SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, Search.this,getSupportFragmentManager());
+                                                        tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
                                 }
 
                                 @Override
@@ -201,7 +254,7 @@ public class Search extends Fragment {
                                             searchResults.add(searchResult);
 
                                             if(!iterator.hasNext()){
-                                                SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, getActivity(),getFragmentManager());
+                                                SearchResultAdapter tagRecyclerViewAdapter = new SearchResultAdapter(searchResults, Search.this,getSupportFragmentManager());
                                                 tagRecyclerView.setAdapter(tagRecyclerViewAdapter);
                                             }
 
@@ -262,10 +315,10 @@ public class Search extends Fragment {
 
     private void searchFromYoutube(final String searchText) {
         videos = new ArrayList<>();
-        searchYoutubeVideoRecyclerView = new SearchYoutubeVideoRecyclerView(videos, getActivity(), searchText);
+        searchYoutubeVideoRecyclerView = new SearchYoutubeVideoRecyclerView(videos, this, searchText);
         searchYouTubeRecyclerView.setAdapter(searchYoutubeVideoRecyclerView);
         String searchUrlYoutube = Constants.getSearchUrl(searchText);
-        VolleyRequest.sendRequestGet(getContext(), searchUrlYoutube, new VolleyRequest.VolleyCallback() {
+        VolleyRequest.sendRequestGet(this, searchUrlYoutube, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
                 parseJson(result, searchText);
@@ -297,7 +350,7 @@ public class Search extends Fragment {
                 public void onClick(View view) {
                     if (nextPageToken != null && !nextPageToken.isEmpty()) {
                         String nextPageUrl = Constants.getSearchUrl(searchText, nextPageToken);
-                        VolleyRequest.sendRequestGet(getContext(), nextPageUrl, new VolleyRequest.VolleyCallback() {
+                        VolleyRequest.sendRequestGet(Search.this, nextPageUrl, new VolleyRequest.VolleyCallback() {
                             @Override
                             public void onSuccess(String result) {
                                 parseJson(result, searchText);
@@ -314,4 +367,19 @@ public class Search extends Fragment {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view==backButton){
+            onBackPressed();
+        }
+    }
 }

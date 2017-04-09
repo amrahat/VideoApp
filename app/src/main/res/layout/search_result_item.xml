@@ -92,15 +92,80 @@
             android:layout_gravity="left"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/viewcount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=" views" />
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/view_count_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingRight="5dp"
+                        android:text="{fa-eye}"
+                        android:textColor="@color/video_list_icon_color"
+                        android:textSize="@dimen/video_list_icon_size" />
+
+                    <TextView
+                        android:id="@+id/viewCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:textSize="@dimen/video_list_icon_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/like_count_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingRight="5dp"
+                        android:text="@string/icon_like"
+                        android:textColor="@color/video_list_icon_color"
+                        android:textSize="@dimen/video_list_icon_size" />
+
+                    <TextView
+                        android:id="@+id/likeCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:textSize="@dimen/video_list_icon_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_count_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingRight="5dp"
+                        android:text="@string/icon_comments"
+                        android:textColor="@color/video_list_icon_color"
+                        android:textSize="@dimen/video_list_icon_size" />
+
+                    <TextView
+                        android:id="@+id/commentCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:textSize="@dimen/video_list_icon_size" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

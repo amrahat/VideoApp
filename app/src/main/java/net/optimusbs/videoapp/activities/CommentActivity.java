@@ -1,5 +1,6 @@
 package net.optimusbs.videoapp.activities;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +29,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
+        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.status_bar_color));
         setContentView(R.layout.activity_comment);
         ButterKnife.inject(this);
         getBundle();

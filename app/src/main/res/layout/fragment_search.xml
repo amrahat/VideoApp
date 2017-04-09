@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-
-    tools:context="net.optimusbs.videoapp.fragments.Search">
-
+    android:background="#ffffff"
+    tools:context="net.optimusbs.videoapp.activities.Search">
+    <include layout="@layout/search_toolbar"
+        android:id="@+id/search_toolbar"/>
     <!-- TODO: Update blank fragment layout -->
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/search_toolbar"
         android:id="@+id/search_recycler_view">
 
     </android.support.v7.widget.RecyclerView>
@@ -17,6 +18,7 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/search_toolbar"
         android:id="@+id/search_youtube_video_recycler_view"
         android:layout_marginBottom="40dp">
 

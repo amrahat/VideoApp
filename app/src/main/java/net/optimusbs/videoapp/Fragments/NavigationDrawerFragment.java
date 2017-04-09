@@ -24,7 +24,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +42,7 @@ import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.activities.Activity2;
 import net.optimusbs.videoapp.activities.HomeActivity;
+import net.optimusbs.videoapp.activities.Search;
 
 import java.util.Arrays;
 
@@ -258,6 +258,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                 } else {
                     Intent intent = new Intent(getActivity(), HomeActivity.class);
                     intent.putExtra("fragment_name", "all_videos");
+                    intent.putExtra("showloader", false);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
@@ -280,6 +281,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                 } else {
                     Intent intent = new Intent(getActivity(), HomeActivity.class);
                     intent.putExtra("fragment_name", "my_videos");
+                    intent.putExtra("showloader", false);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
@@ -375,21 +377,10 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
             public void onClick(View view) {
                 String activityName = getActivity().getLocalClassName();
                 Log.d(TAG, "onClick: " + activityName);
-                /*String activity2Name = "activities.Activity2";
-                if (activityName.equals(activity2Name)) {
-                    getFragmentManager().
-                            beginTransaction().
-                            setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
-                            replace(R.id.container, new Search()).
-                            commit();
-                } else {*/
-                Intent intent = new Intent(getActivity(), Activity2.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("fragment_name", "search");
-                intent.putExtra("bundle", bundle);
+
+                Intent intent = new Intent(getActivity(), Search.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                // }
 
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
             }

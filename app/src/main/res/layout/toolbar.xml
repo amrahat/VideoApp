@@ -40,7 +40,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <!--<RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/search_layout"
@@ -65,7 +65,7 @@
                 android:textColorHint="#ffffff"
                 android:textColor="#ffffff"
                 android:hint="Search for videos,tags"/>
-        </RelativeLayout>
+        </RelativeLayout>-->
 
 
 

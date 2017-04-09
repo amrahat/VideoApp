@@ -18,6 +18,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import net.optimusbs.videoapp.R;
+import net.optimusbs.videoapp.activities.Activity2;
 import net.optimusbs.videoapp.activities.VideoPlayer;
 import net.optimusbs.videoapp.fragments.VideosUnderTag;
 import net.optimusbs.videoapp.models.SearchResult;
@@ -56,11 +57,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             holder.tagFavLayout.setVisibility(View.VISIBLE);
             holder.videoViewLayout.setVisibility(View.GONE);
             holder.favCount.setText(searchResult.getFavouriteCount()+"");
+            holder.tagVideoCount.setText(String.valueOf(searchResult.getTagVideoCount()));
         }else {
             holder.tagFavLayout.setVisibility(View.GONE);
             holder.videoViewLayout.setVisibility(View.VISIBLE);
             holder.viewCount.setText(searchResult.getViewCount());
             holder.type.setText(context.getString(R.string.icon_video));
+            holder.likeCount.setText(searchResult.getLikeCount());
+            holder.commentCount.setText(searchResult.getCommentCount());
         }
 
         if(searchResult.getThumbnail()!=null && !searchResult.getThumbnail().isEmpty()){
@@ -73,7 +77,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             @Override
             public void onClick(View view) {
                 if(searchResult.isTag()){
-                    VideosUnderTag videosUnderTag = new VideosUnderTag();
+                    /*VideosUnderTag videosUnderTag = new VideosUnderTag();
                     Bundle bundle = new Bundle();
                     bundle.putString("tag_name", searchResult.getTitle());
                     videosUnderTag.setArguments(bundle);
@@ -81,7 +85,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                             beginTransaction().
                             add(R.id.container, videosUnderTag).
                             addToBackStack("specific_tag").
-                            commit();
+                            commit();*/
+
+                    Intent intent = new Intent(context, Activity2.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag_name", searchResult.getTitle());
+                    bundle.putString("fragment_name", "video_under_tag");
+                    intent.putExtra("bundle",bundle);
+                    context.startActivity(intent);
+
+
                 }else {
                     Intent intent = new Intent(context, VideoPlayer.class);
                     Bundle bundle = new Bundle();
@@ -103,7 +116,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         IconTextView type;
         TextView title;
         ImageView videoThumbnail;
-        TextView favCount,viewCount;
+        TextView favCount,viewCount,likeCount,commentCount,tagVideoCount;
         RelativeLayout tagFavLayout;
         LinearLayout videoViewLayout;
         public SearchResultHolder(View itemView) {
@@ -111,7 +124,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             type = (IconTextView) itemView.findViewById(R.id.type);
             title = (TextView) itemView.findViewById(R.id.title);
             favCount = (TextView) itemView.findViewById(R.id.favcount);
-            viewCount = (TextView) itemView.findViewById(R.id.viewcount);
+            viewCount = (TextView) itemView.findViewById(R.id.viewCount);
+            likeCount = (TextView) itemView.findViewById(R.id.likeCount);
+            tagVideoCount = (TextView) itemView.findViewById(R.id.video_count);
+            commentCount = (TextView) itemView.findViewById(R.id.commentCount);
             videoThumbnail = (ImageView) itemView.findViewById(R.id.video_thumbnail);
 
             tagFavLayout = (RelativeLayout) itemView.findViewById(R.id.tag_fav_count_layout);

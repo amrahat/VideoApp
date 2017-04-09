@@ -35,4 +35,9 @@ public class SetUpToolbar {
     }
 
 
+    public static Toolbar setupToolbarForSearch(Activity activity) {
+        Toolbar toolbar = (android.support.v7.widget.Toolbar) activity.findViewById(R.id.tabanim_toolbar);
+        return toolbar;
+
+    }
 }

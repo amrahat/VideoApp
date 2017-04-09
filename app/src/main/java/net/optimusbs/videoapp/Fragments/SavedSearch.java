@@ -40,7 +40,7 @@ public class SavedSearch extends Fragment {
         return view;
     }
     private void hideSearchEditText() {
-        getActivity().findViewById(R.id.search_layout).setVisibility(View.GONE);
+//        getActivity().findViewById(R.id.search_layout).setVisibility(View.GONE);
         getActivity().findViewById(R.id.title_layout).setVisibility(View.VISIBLE);
         //drawerFragment.showHamburgetIcon();
 

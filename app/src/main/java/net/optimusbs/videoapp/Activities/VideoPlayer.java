@@ -148,6 +148,7 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.fragment_youtube_player);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.status_bar_color));
         loginDialog = new LoginDialog();
         fireBaseClass = new FireBaseClass(this);
         facebookApi = new FacebookApi(getApplicationContext());

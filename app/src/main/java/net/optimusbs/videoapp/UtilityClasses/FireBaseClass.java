@@ -45,7 +45,9 @@ public class FireBaseClass {
     }
 
     public void addVideoToDatabase(String videoId, String key,String value){
-        videoRef.child(videoId).child(key).setValue(value);
+       if(value!=null && !value.isEmpty()){
+           videoRef.child(videoId).child(key).setValue(value);
+       }
     }
 
     public DatabaseReference getCommentRef() {

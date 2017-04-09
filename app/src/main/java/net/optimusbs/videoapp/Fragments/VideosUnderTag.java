@@ -72,7 +72,6 @@ public class VideosUnderTag extends Fragment {
         videoListUnderTag.setItemAnimator(new DefaultItemAnimator());
         videoListUnderTag.addItemDecoration(new ItemDecoration(getContext()));
 
-        getActivity().findViewById(R.id.search_edittext).setVisibility(View.GONE);
         getActivity().findViewById(R.id.title_layout).setVisibility(View.VISIBLE);
     }
 

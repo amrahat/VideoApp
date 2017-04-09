@@ -63,7 +63,6 @@ public class Tags extends Fragment implements OnTagFavoriteClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tags, container, false);
         SetUpToolbar.setTitle("Tags", getActivity());
-        hideSearchEditText();
 
         initializeViews(view);
         findTags();
@@ -129,10 +128,7 @@ public class Tags extends Fragment implements OnTagFavoriteClickListener {
         });
     }
 
-    private void hideSearchEditText() {
-        getActivity().findViewById(R.id.search_layout).setVisibility(View.GONE);
-        getActivity().findViewById(R.id.title_layout).setVisibility(View.VISIBLE);
-    }
+
 
     private void initializeViews(View view) {
         tagCount = (TextView) view.findViewById(R.id.tag_count);

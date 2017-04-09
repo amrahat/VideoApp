@@ -15,6 +15,8 @@ public class SearchResult implements Serializable {
     private long tagVideoCount;
     private long favouriteCount;
     private boolean favByCurrentUser;
+    private String commentCount;
+    private String likeCount;
 
     public SearchResult() {
     }
@@ -81,5 +83,21 @@ public class SearchResult implements Serializable {
 
     public boolean isFavByCurrentUser() {
         return favByCurrentUser;
+    }
+
+    public void setCommentCount(String s) {
+        this.commentCount = s;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
+
+    public void setLikeCount(String s) {
+        this.likeCount = s;
+    }
+
+    public String getLikeCount() {
+        return likeCount;
     }
 }

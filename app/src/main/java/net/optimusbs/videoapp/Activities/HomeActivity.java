@@ -1,7 +1,9 @@
 package net.optimusbs.videoapp.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         ButterKnife.inject(this);
         setUpToolbarAndDrawer();
+        getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.status_bar_color));
         if(getIntent().hasExtra("fragment_name")){
             if(getIntent().getStringExtra("fragment_name").equals("all_videos")){
                 navigateToAllVideos();
