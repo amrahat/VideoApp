@@ -2,8 +2,10 @@ package net.optimusbs.videoapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.squareup.picasso.Picasso;
 
 import net.optimusbs.videoapp.R;
@@ -18,10 +22,11 @@ import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.activities.VideoPlayer;
 import net.optimusbs.videoapp.models.Video;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by AMRahat on 3/7/2017.
@@ -60,18 +65,25 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
             holder.viewCount.setText(video.getViewCount());
         }
 
-        if(video.getCommentCount()==null){
-        }else {
+        if (video.getCommentCount() == null) {
+        } else {
             holder.commentCount.setText(video.getCommentCount());
 
         }
 
-        if(video.getLikeCount()==null){
+        if (video.getLikeCount() == null) {
 
-        }else {
+        } else {
             holder.likeCount.setText(video.getLikeCount());
 
         }
+
+
+        String date = video.getPublished_time();
+        Log.d("date", "onBindViewHolder: " + video.getPublished_time());
+        holder.duration.setText(getDurationMessage(date));
+
+
         Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumbnail);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +102,28 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
 
     }
 
+    private String getDurationMessage(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+        try {
+            Date date1 = formatter.parse(date);
+            Log.d("date", "onCreate: " + date1.getTime());
+            Date date2 = new Date();
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            Log.d("date", "current: " + timestamp.getTime());
+
+            String text = getDifferenceText(timestamp.getTime(), date1.getTime());
+            Log.d("differencemessage", "onBindViewHolder: " + text);
+
+            return text;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        } catch (NullPointerException e) {
+            return "";
+        }
+
+    }
+
 
     @Override
     public int getItemCount() {
@@ -99,8 +133,9 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
     public static class VideoList extends RecyclerView.ViewHolder {
 
         private final LinearLayout viewCountLayout;
+        private TextView duration;
         ImageView thumbnail;
-        TextView title, viewCount,likeCount,commentCount;
+        TextView title, viewCount, likeCount, commentCount;
 
         public VideoList(View itemView) {
             super(itemView);
@@ -110,6 +145,49 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
             viewCountLayout = (LinearLayout) itemView.findViewById(R.id.view_count_layout);
             likeCount = (TextView) itemView.findViewById(R.id.likeCount);
             commentCount = (TextView) itemView.findViewById(R.id.commentCount);
+            duration = (TextView) itemView.findViewById(R.id.duration);
         }
+    }
+
+    private String getDifferenceText(Long currentTimeStamp, Long commentTimeStamp) {
+        try {
+            Long difference = currentTimeStamp - commentTimeStamp;
+
+            int differenceInSec = (int) (difference / 1000);
+            Log.d("getDifferenceText", "getDifferenceText: " + differenceInSec);
+            String message = "";
+            //int differenceInSec = difference/1000;
+            //Log.d("differenceInSec",differenceInSec+","+difference);
+            if (differenceInSec < 60) { //1min
+                message = "Just Now";
+            } else if (differenceInSec < 3600) { //1hr
+                int diffInMin = differenceInSec / 60;
+                message = diffInMin + getSingularOrPluralText(diffInMin, " min") + " ago";
+            } else if (differenceInSec < 86400) { //1day 60*24
+                int diffInHour = differenceInSec / 3600;
+                message = diffInHour + getSingularOrPluralText(diffInHour, " hour") + " ago";
+            } else if (differenceInSec < (86400 * 30)) { //1week
+                int diffInDay = differenceInSec / 86400;
+                message = diffInDay + getSingularOrPluralText(diffInDay, " day") + " ago";
+            } else if (differenceInSec < (86400 * 30 * 12)) {
+                int diffInMonth = differenceInSec / (86400 * 30);
+                message = diffInMonth + getSingularOrPluralText(diffInMonth, " month") + " ago";
+            } else {
+                int diffInYear = differenceInSec / (86400 * 30 * 12);
+                message = diffInYear + getSingularOrPluralText(diffInYear, " year") + " ago";
+            }
+            return message;
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+    }
+
+    private String getSingularOrPluralText(int diff, String text) {
+        if (diff <= 1) {
+            return text;
+        }
+        return text + "s";
+
     }
 }

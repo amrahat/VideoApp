@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Video implements Serializable {
-    private String id,title,description,publishedAt,viewCount,likeCount,commentCount,thumbnail;
+    private String id,title,description, published_time,viewCount,likeCount,commentCount,thumbnail;
 
     public Video() {
     }
@@ -16,7 +16,7 @@ public class Video implements Serializable {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.publishedAt = publishedAt;
+        this.published_time = publishedAt;
         this.viewCount = viewCount;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
@@ -56,12 +56,12 @@ public class Video implements Serializable {
         this.description = description;
     }
 
-    public String getPublishedAt() {
-        return publishedAt;
+    public String getPublished_time() {
+        return published_time;
     }
 
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setPublished_time(String published_time) {
+        this.published_time = published_time;
     }
 
     public String getViewCount() {

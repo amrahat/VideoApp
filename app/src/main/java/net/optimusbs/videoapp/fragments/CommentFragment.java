@@ -70,7 +70,7 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
     DatabaseReference userDb, commentRef;
     private TextView postTv;
     private ProfileTracker mProfileTracker;
-
+    private boolean isUserLoggedIn = false;
     public CommentFragment() {
         // Required empty public constructor
     }
@@ -91,8 +91,9 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         View view = inflater.inflate(R.layout.fragment_comment, container, false);
         initViews(view);
         initializeFireBase();
-        getBundles();
         checkLoginStatus();
+        getBundles();
+
         return view;
     }
 
@@ -106,9 +107,11 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         if (AccessToken.getCurrentAccessToken() != null) {
             postCommentLayout.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
+            isUserLoggedIn = true;
         } else {
             postCommentLayout.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
+            isUserLoggedIn = false;
         }
     }
 
@@ -139,7 +142,7 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
                 // facebookApi.likeAPost(videoId);
             }*/
 
-            getCommentsFromFirebase(this);
+           if(isUserLoggedIn) getCommentsFromFirebase(this);
         }
 
     }
@@ -337,8 +340,8 @@ public class CommentFragment extends Fragment implements OnCommentLoadListener, 
         }
         loginLayout.setVisibility(View.GONE);
         postCommentLayout.setVisibility(View.VISIBLE);
-        facebookApi.getCommentsOfPost(videoId, AccessToken.getCurrentAccessToken().getToken(), this);
-
+        //facebookApi.getCommentsOfPost(videoId, AccessToken.getCurrentAccessToken().getToken(), this);
+        getCommentsFromFirebase(this);
     }
 
     private void setProfileValueInFirebase(Profile profile) {

@@ -17,6 +17,7 @@ public class SearchResult implements Serializable {
     private boolean favByCurrentUser;
     private String commentCount;
     private String likeCount;
+    private String published_at;
 
     public SearchResult() {
     }
@@ -99,5 +100,13 @@ public class SearchResult implements Serializable {
 
     public String getLikeCount() {
         return likeCount;
+    }
+
+    public String getPublished_at() {
+        return published_at;
+    }
+
+    public void setPublished_at(String published_at) {
+        this.published_at = published_at;
     }
 }

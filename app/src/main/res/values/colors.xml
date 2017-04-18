@@ -22,11 +22,13 @@
     <color name="video_player_bottom_test_back_pressed">#a3a3a3</color>
     <color name="video_player_bottom_icon_color">#D21D52</color>
     <color name="video_player_bottom_icon_selected_color">#303F9F</color>
+    <color name="border_color">#A8A7A7</color>
+    <color name="view_like_tag_color">#5B5B5B</color>
 
 
-
-    <color name="nav_drawer_icon_color">#D21D52</color>
-    <color name="nav_drawer_text_color">#D21D52</color>
+    <color name="nav_drawer_icon_color">#333333</color>
+    <color name="nav_drawer_text_color">#333333</color>
+    <color name="user_name_color">#D21D52</color>
     <color name="top_bar_icon_color">#D21D52</color>
 
 
@@ -35,7 +37,7 @@
 
 
 
-    <color name="video_list_icon_color">#a3a3a3</color>
+    <color name="video_list_icon_color">@color/toolbar_color</color>
     <color name="back_button_selected">#660C26</color>
 
 

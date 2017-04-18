@@ -43,7 +43,8 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:textSize="18sp"
-            android:textColor="@color/nav_drawer_text_color"
+            android:textStyle="bold"
+            android:textColor="@color/user_name_color"
 
             />
     </LinearLayout>

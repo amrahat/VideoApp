@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,11 @@ import net.optimusbs.videoapp.models.Video;
 import net.optimusbs.videoapp.R;
 import net.optimusbs.videoapp.UtilityClasses.SharedPreferenceClass;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Sohel on 1/7/2017.
@@ -46,6 +51,8 @@ public class SearchYoutubeVideoRecyclerView extends RecyclerView.Adapter<SearchY
     public void onBindViewHolder(VideoList holder, int position) {
         final Video video = videos.get(position);
         holder.title.setText(video.getTitle());
+        holder.publishedAtTime.setText(getDurationMessage(video.getPublished_time()));
+        //holder.viewCount.setText(video.getViewCount());
         Picasso.with(context).load(video.getThumbnail()).stableKey(video.getThumbnail()).into(holder.thumnail);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -71,11 +78,78 @@ public class SearchYoutubeVideoRecyclerView extends RecyclerView.Adapter<SearchY
 
         TextView title;
         ImageView thumnail;
+        TextView publishedAtTime/*,viewCount*/;
 
         public VideoList(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             thumnail = (ImageView) itemView.findViewById(R.id.video_thumbnail);
+            publishedAtTime = (TextView) itemView.findViewById(R.id.published_at_time);
+           // viewCount = (TextView) itemView.findViewById(R.id.viewCount);
         }
+    }
+
+    private String getDurationMessage(String date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+        try {
+            Date date1 = formatter.parse(date);
+            Log.d("date", "onCreate: " + date1.getTime());
+            Date date2 = new Date();
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            Log.d("date", "current: " + timestamp.getTime());
+
+            String text = getDifferenceText(timestamp.getTime(), date1.getTime());
+            Log.d("differencemessage", "onBindViewHolder: " + text);
+
+            return text;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        } catch (NullPointerException e) {
+            return "";
+        }
+
+    }
+
+    private String getDifferenceText(Long currentTimeStamp, Long commentTimeStamp) {
+        try {
+            Long difference = currentTimeStamp - commentTimeStamp;
+
+            int differenceInSec = (int) (difference / 1000);
+            Log.d("getDifferenceText", "getDifferenceText: " + differenceInSec);
+            String message = "";
+            //int differenceInSec = difference/1000;
+            //Log.d("differenceInSec",differenceInSec+","+difference);
+            if (differenceInSec < 60) { //1min
+                message = "Just Now";
+            } else if (differenceInSec < 3600) { //1hr
+                int diffInMin = differenceInSec / 60;
+                message = diffInMin + getSingularOrPluralText(diffInMin, " min") + " ago";
+            } else if (differenceInSec < 86400) { //1day 60*24
+                int diffInHour = differenceInSec / 3600;
+                message = diffInHour + getSingularOrPluralText(diffInHour, " hour") + " ago";
+            } else if (differenceInSec < (86400 * 30)) { //1week
+                int diffInDay = differenceInSec / 86400;
+                message = diffInDay + getSingularOrPluralText(diffInDay, " day") + " ago";
+            } else if (differenceInSec < (86400 * 30 * 12)) {
+                int diffInMonth = differenceInSec / (86400 * 30);
+                message = diffInMonth + getSingularOrPluralText(diffInMonth, " month") + " ago";
+            } else {
+                int diffInYear = differenceInSec / (86400 * 30 * 12);
+                message = diffInYear + getSingularOrPluralText(diffInYear, " year") + " ago";
+            }
+            return message;
+        } catch (NumberFormatException e) {
+            return "";
+        }
+
+    }
+
+    private String getSingularOrPluralText(int diff, String text) {
+        if (diff <= 1) {
+            return text;
+        }
+        return text + "s";
+
     }
 }

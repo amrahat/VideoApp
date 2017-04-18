@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="3dp">
-    <!--android:layout_width="@dimen/video_list_by_tag_height"
-            android:layout_height="@dimen/video_list_by_tag_height"-->
+    android:layout_height="@dimen/video_list_by_tag_height"
+    android:layout_margin="1dp"
+    android:orientation="horizontal">
+    <!---->
     <ImageView
         android:id="@+id/video_thumbnail"
-
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/video_list_by_tag_image_width"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/user_placeholder" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
 
     <LinearLayout
@@ -25,8 +24,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/title"
@@ -34,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#000000"
-                android:textSize="13sp" />
+                android:textColor="@color/toolbar_color"
+                android:textSize="16sp" />
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:id="@+id/type"
@@ -48,8 +46,6 @@
         </LinearLayout>
 
 
-
-
         <RelativeLayout
             android:id="@+id/tag_fav_count_layout"
             android:layout_width="match_parent"
@@ -57,22 +53,23 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:padding="5dp"
-                android:layout_height="wrap_content">
+                android:padding="5dp">
+
                 <TextView
+                    android:id="@+id/favcount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/favcount"
-                    android:text=""
-                    android:textColor="@color/toolbar_color"
                     android:paddingRight="3dp"
-                    />
+                    android:text=""
+                    android:textColor="@color/toolbar_color" />
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:textColor="@color/toolbar_color"
                     android:layout_height="wrap_content"
-                    android:text="people added as favourite"/>
+                    android:text="people added as favourite"
+                    android:textColor="@color/toolbar_color" />
             </LinearLayout>
 
             <TextView
@@ -167,6 +164,13 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/published_at_time"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/border_color"/>
     </LinearLayout>
 
 

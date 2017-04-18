@@ -1,6 +1,7 @@
 package net.optimusbs.videoapp.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import net.optimusbs.videoapp.activities.Activity2;
 import net.optimusbs.videoapp.interfaces.OnTagFavoriteClickListener;
 import net.optimusbs.videoapp.models.Tag;
 import net.optimusbs.videoapp.fragments.VideosUnderTag;
@@ -87,7 +89,14 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
                 if(fromSearch){
                     SharedPreferenceClass.addToSavedSearch(tag.getTagName(),activity);
                 }
-                VideosUnderTag videosUnderTag = new VideosUnderTag();
+
+                Intent intent = new Intent(activity, Activity2.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("tag_name", tag.getTagName());
+                bundle.putString("fragment_name", "video_under_tag");
+                intent.putExtra("bundle",bundle);
+                activity.startActivity(intent);
+                /*VideosUnderTag videosUnderTag = new VideosUnderTag();
                 Bundle bundle = new Bundle();
                 bundle.putString("tag_name", tag.getTagName());
                 videosUnderTag.setArguments(bundle);
@@ -96,7 +105,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<TagRecyclerView
                         beginTransaction().
                         add(R.id.container, videosUnderTag).
                         addToBackStack("specific_tag").
-                        commit();
+                        commit();*/
             }
         });
 

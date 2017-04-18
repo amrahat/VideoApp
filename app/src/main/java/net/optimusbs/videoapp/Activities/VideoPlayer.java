@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -329,18 +330,47 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
                         videoListRef.child(videoList.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Video video = dataSnapshot.getValue(Video.class);
+                                final Video video = dataSnapshot.getValue(Video.class);
                                 if (video != null) {
                                     video.setId(videoList.get(finalI));
-                                    videos.add(video);
+
+                                    fireBaseClass.getCommentRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            video.setCommentCount(String.valueOf(dataSnapshot.getChildrenCount()));
+
+                                            fireBaseClass.getLikeRef().child(video.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    video.setLikeCount(String.valueOf(dataSnapshot.getChildrenCount()));
+                                                    videos.add(video);
+
+                                                    if (finalI == videoList.size() - 1) {
+                                                        //setadapter
+                                                        VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getApplicationContext(), tag);
+                                                        relatedVideosList.setAdapter(videoListByTagAdapter);
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
                                 }
 
 
-                                if (finalI == videoList.size() - 1) {
-                                    //setadapter
-                                    VideoListByTagAdapter2 videoListByTagAdapter = new VideoListByTagAdapter2(videos, getApplicationContext(), tag);
-                                    relatedVideosList.setAdapter(videoListByTagAdapter);
-                                }
+
                             }
 
                             @Override
@@ -448,10 +478,31 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             e.printStackTrace();
         }
 
+
+
     }
 
     private void showTagsInTagContainer(ArrayList<String> tagsList) {
-        tagContainer.addTags(this, tagsList);
+        if(tagsList.size()>8) {
+            ArrayList<String> tags = new ArrayList<>();
+            for (int i = 0; i < 8; i++) {
+                tags.add(tagsList.get(i));
+            }
+            tagContainer.addTags(this,tags);
+        }else {
+            tagContainer.addTags(this, tagsList);
+        }
+        /*tagContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d("tagcountlayout", "showTagsInTagContainer: "+tagContainer.getChildAt(0).getMeasuredHeight());
+                Log.d("tagcountlayout", "showTagsInTagContainer: "+tagContainer.getMeasuredHeight());
+                tagContainer.getLayoutParams().height = tagContainer.getChildAt(0).getMeasuredHeight()*2;
+
+
+            }
+        });*/
+
     }
 
     private void setUpViews(Video video) {
@@ -476,13 +527,40 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         });*/
 
         viewCount.setText(video.getViewCount());
-        likeCount.setText(video.getLikeCount());
-        commentCount.setText(video.getCommentCount());
+
+        setLikeAndComment();
+
+
 
         fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_TITLE, video.getTitle());
         fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_THUMBNAIL, video.getThumbnail());
         fireBaseClass.addVideoToDatabase(videoId, Constants.VIDEO_DESCRIPTION, video.getDescription());
         fireBaseClass.addVideoToDatabase(videoId, Constants.VIEW_COUNT, video.getViewCount());
+    }
+
+    private void setLikeAndComment() {
+        fireBaseClass.getCommentRef().child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                commentCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                fireBaseClass.getLikeRef().child(videoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        likeCount.setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -523,7 +601,14 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         } else {
-            super.onBackPressed();
+            if(isTaskRoot()){
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra("showloader", false);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -555,6 +640,8 @@ public class VideoPlayer extends YouTubeBaseActivity implements YouTubePlayer.On
         }
 
     }
+
+
 
     private void showCommentFragment() {
         /*if (facebookPostId != null) {

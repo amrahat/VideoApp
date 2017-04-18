@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -191,7 +192,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     searchResult.setThumbnail(String.valueOf(dataSnapshot.child(Constants.VIDEO_THUMBNAIL).getValue()));
                                     searchResult.setViewCount(String.valueOf(dataSnapshot.child(Constants.VIEW_COUNT).getValue()));
-
+                                    searchResult.setPublished_at((String) dataSnapshot.child(Constants.VIDEO_PUBLISHED_AT).getValue());
                                     fireBaseClass.getCommentRef().child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -318,6 +319,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
         searchYoutubeVideoRecyclerView = new SearchYoutubeVideoRecyclerView(videos, this, searchText);
         searchYouTubeRecyclerView.setAdapter(searchYoutubeVideoRecyclerView);
         String searchUrlYoutube = Constants.getSearchUrl(searchText);
+        Log.d("searchFromYoutube", "searchUrlFromYoutube: "+searchUrlYoutube);
         VolleyRequest.sendRequestGet(this, searchUrlYoutube, new VolleyRequest.VolleyCallback() {
             @Override
             public void onSuccess(String result) {
@@ -338,6 +340,16 @@ public class Search extends AppCompatActivity implements View.OnClickListener {
                 video.setId(item.getJSONObject("id").getString("videoId"));
                 video.setTitle(item.getJSONObject("snippet").getString("title"));
                 video.setThumbnail(item.getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("default").getString("url"));
+                String publishedAt = item.getJSONObject("snippet").getString("publishedAt");
+                video.setPublished_time(publishedAt);
+                String viewCount="",likeCount="",commentCount="";
+                if(item.has("statistics")){
+                    JSONObject statisticsObject = item.getJSONObject("statistics");
+                    viewCount = statisticsObject.getString("viewCount");
+                    video.setViewCount(viewCount);
+                    video.setLikeCount("0");
+                    video.setCommentCount("0");
+                }
                 videos.add(video);
             }
 

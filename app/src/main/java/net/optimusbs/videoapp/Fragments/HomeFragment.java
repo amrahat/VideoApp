@@ -1,6 +1,7 @@
 package net.optimusbs.videoapp.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,8 @@ import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.FireBaseClass;
 import net.optimusbs.videoapp.UtilityClasses.OnSwipeTouchListener;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
+import net.optimusbs.videoapp.activities.Activity2;
+import net.optimusbs.videoapp.activities.HomeActivity;
 import net.optimusbs.videoapp.adapters.VideoListByTagAdapter2;
 import net.optimusbs.videoapp.models.GetHashCode;
 import net.optimusbs.videoapp.models.Video;
@@ -162,7 +165,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void getVideosByTag(final String firstTag, final boolean leftToRight) {
         tagName.setText(firstTag);
-        tagRef.child(firstTag).addValueEventListener(new ValueEventListener() {
+        tagRef.child(firstTag).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
@@ -207,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getVideosByTag(final String tag, final RecyclerView recyclerView, final int count, final TextView total_count) {
-        tagRef.child(tag).addValueEventListener(new ValueEventListener() {
+        tagRef.child(tag).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> videoList = (ArrayList<String>) dataSnapshot.getValue();
@@ -301,6 +304,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     vieeAll.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), Activity2.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag_name", tagName);
+                            bundle.putString("fragment_name", "video_under_tag");
+                            intent.putExtra("bundle",bundle);
+                            getContext().startActivity(intent);
+
+                            /*if(getActivity()!=null){
+                                ((HomeActivity)getActivity()).drawerFragment.setSelected(Constants.TAGS);
+                            }
                             VideosUnderTag videosUnderTag = new VideosUnderTag();
                             Bundle bundle = new Bundle();
                             bundle.putString("tag_name", tagName);
@@ -310,7 +323,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     beginTransaction().
                                     replace(R.id.container, videosUnderTag).
                                     addToBackStack("specific_tag").
-                                    commit();
+                                    commit();*/
                         }
                     });
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

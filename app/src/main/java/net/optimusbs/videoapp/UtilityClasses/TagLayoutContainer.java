@@ -8,8 +8,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import net.optimusbs.videoapp.R;
@@ -193,12 +195,14 @@ public class TagLayoutContainer extends ViewGroup {
 
 
     public void addTags(Activity activity, ArrayList<String> list) {
+        final int[] height = {0};
         for (int i = 0; i < list.size(); i++) {
             final String tagString = list.get(i);
             final View view = activity.getLayoutInflater().inflate(R.layout.tag_view, null);
+
             final TextView textView = (TextView) view.findViewById(R.id.text);
             textView.setText(tagString);
-            textView.setTextSize(12);
+            textView.setTextSize(10);
             // textView.setId(i);
             MarginLayoutParams lp = new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             lp.bottomMargin = (int) dip2px(2);
@@ -216,6 +220,24 @@ public class TagLayoutContainer extends ViewGroup {
 
                 }
             });
+
+            /*view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Log.d("asdfsaf", "onGlobalLayout: "+view.getHeight());
+                    height[0] = view.getHeight();
+                    minHeight = height[0];
+                    ((LayoutParams)getLayoutParams()).height = (view.getHeight() *2)+(int) dip2px(9);
+
+                }
+            });*/
+
+
+
+
+
+
 
             addView(view, i, lp);
 

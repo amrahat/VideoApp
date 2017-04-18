@@ -65,4 +65,12 @@ public class FireBaseClass {
     public void setLikeRef(DatabaseReference likeRef) {
         this.likeRef = likeRef;
     }
+
+    public DatabaseReference getVideoRef() {
+        return videoRef;
+    }
+
+    public DatabaseReference getTagRef() {
+        return tagRef;
+    }
 }

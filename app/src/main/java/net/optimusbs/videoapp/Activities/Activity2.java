@@ -2,6 +2,7 @@ package net.optimusbs.videoapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import net.optimusbs.videoapp.R;
+import net.optimusbs.videoapp.UtilityClasses.Constants;
 import net.optimusbs.videoapp.UtilityClasses.SetUpToolbar;
 import net.optimusbs.videoapp.fragments.Login;
 import net.optimusbs.videoapp.fragments.NavigationDrawerFragment;
@@ -76,6 +78,7 @@ public class Activity2 extends AppCompatActivity {
                         add(R.id.container, new Tags()).
                         commit();
                 SetUpToolbar.setTitle("Tags", this);
+                drawerFragment.setSelected(Constants.TAGS);
                 //hideSearchEditText();
                 break;
 
@@ -98,6 +101,7 @@ public class Activity2 extends AppCompatActivity {
                         replace(R.id.container, new SavedSearch()).
                         addToBackStack("search").
                         commit();
+                drawerFragment.setSelected(Constants.SAVED_SEARCH);
                 //SetUpToolbar.setTitle("Search",this);
                 //hideSearchEditText();
                 break;
@@ -122,6 +126,8 @@ public class Activity2 extends AppCompatActivity {
                         beginTransaction().
                         replace(R.id.container, videosUnderTag).
                         commit();
+                drawerFragment.setSelected(Constants.TAGS);
+
         }
     }
 

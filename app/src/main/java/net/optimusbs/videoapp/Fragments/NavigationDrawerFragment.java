@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -77,6 +78,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProfileTracker mProfileTracker;
 
+    private LinearLayout selectedLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +102,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                if(currentAccessToken==null){
+                if (currentAccessToken == null) {
                     setOnLoggedOut();
                 }
             }
@@ -160,6 +163,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
         return view;
     }
 
+
     private void setOnClickListeners() {
         tagLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +177,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                             setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
                             replace(R.id.container, new Tags()).
                             commit();
+                    setSelected(tagLayout);
                 } else {
                     Intent intent = new Intent(getActivity(), Activity2.class);
                     Bundle bundle = new Bundle();
@@ -212,6 +217,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                             setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
                             replace(R.id.container, new SavedSearch()).
                             commit();
+                    setSelected(savedSearchLayout);
                 } else {
                     Intent intent = new Intent(getActivity(), Activity2.class);
                     Bundle bundle = new Bundle();
@@ -255,6 +261,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                             //setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
                                     replace(R.id.container, new AllVideos()).
                             commit();
+                    setSelected(allVideosLayout);
                 } else {
                     Intent intent = new Intent(getActivity(), HomeActivity.class);
                     intent.putExtra("fragment_name", "all_videos");
@@ -262,7 +269,6 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
-
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
@@ -278,6 +284,8 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                             //setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right).
                                     replace(R.id.container, new MyVideosFragment()).
                             commit();
+                    setSelected(myFavLayout);
+
                 } else {
                     Intent intent = new Intent(getActivity(), HomeActivity.class);
                     intent.putExtra("fragment_name", "my_videos");
@@ -299,7 +307,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                 Arrays.asList("publish_actions"));*/
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
         // loginButton.setPublishPermissions("publish_actions");
-        loginButton.setReadPermissions(Arrays.asList("email","public_profile"));
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
         // If using in a fragment
         loginButton.setFragment(NavigationDrawerFragment.this);
 
@@ -403,7 +411,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
 
     }
 
-    public void setOnLoggedIn(Profile profile){
+    public void setOnLoggedIn(Profile profile) {
         loginText.setText(logout);
 
         //userLayout.setVisibility(View.VISIBLE);
@@ -418,6 +426,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
 
         }
     }
+
     public void setOnLoggedIn() {
         loginText.setText(logout);
 
@@ -459,17 +468,16 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
 
     @Override
     public void onSuccess(LoginResult loginResult) {
-       // Profile profile = Profile.getCurrentProfile();
+        // Profile profile = Profile.getCurrentProfile();
         //  User user = new User(profile.getId(),profile.getName(),profile.getProfilePictureUri(500,500).toString());
 
 
-
-        if(Profile.getCurrentProfile() == null) {
+        if (Profile.getCurrentProfile() == null) {
             mProfileTracker = new ProfileTracker() {
                 @Override
                 protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                     // profile2 is the new profile
-                    Log.d("facebook", profile2.getFirstName()+"asled");
+                    Log.d("facebook", profile2.getFirstName() + "asled");
                     mProfileTracker.stopTracking();
                     setProfileValueInFirebase(profile2);
                     setOnLoggedIn(profile2);
@@ -477,8 +485,7 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
             };
             // no need to call startTracking() on mProfileTracker
             // because it is called by its constructor, internally.
-        }
-        else {
+        } else {
             Profile profile = Profile.getCurrentProfile();
             Log.d("facebook", profile.getFirstName());
             Log.d("idaslkdfjal", profile.getFirstName() + AccessToken.getCurrentAccessToken().getToken());
@@ -529,5 +536,58 @@ public class NavigationDrawerFragment extends Fragment implements FacebookCallba
                 //do nothing
                 break;
         }
+    }
+
+    public void setSelected(String fragment_name) {
+        switch (fragment_name) {
+            case Constants.HOME:
+                setSelected(homeLayout);
+                break;
+            case Constants.ALL_VIDEOS:
+                setSelected(allVideosLayout);
+                break;
+            case Constants.MY_VIDEOS:
+                setSelected(myFavLayout);
+                break;
+            case Constants.TAGS:
+                setSelected(tagLayout);
+                break;
+            case Constants.SAVED_SEARCH:
+                setSelected(savedSearchLayout);
+                break;
+            default:
+                if (selectedLayout != null) {
+                    makeLayoutUnselected(selectedLayout);
+                    selectedLayout = null;
+                }
+
+        }
+    }
+
+    private void setSelected(LinearLayout layout) {
+        if (selectedLayout != null) {
+            makeLayoutUnselected(selectedLayout);
+        }
+        selectedLayout = layout;
+        makeLayoutSelected(layout);
+
+    }
+
+    private void makeLayoutSelected(LinearLayout layout) {
+        changeLayoutChildColor(layout, R.color.toolbar_color);
+    }
+
+    private void changeLayoutChildColor(LinearLayout layout, int color) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View v = layout.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView t = (TextView) v;
+                t.setTextColor(ContextCompat.getColor(getContext(), color));
+            }
+        }
+    }
+
+    private void makeLayoutUnselected(LinearLayout selectedLayout) {
+        changeLayoutChildColor(selectedLayout, R.color.nav_drawer_icon_color);
     }
 }

@@ -28,6 +28,7 @@ public class Constants {
     public static String HOME_CAT_REF = "home-categories";
     public static String VIDEO_TITLE = "title";
     public static String VIDEO_THUMBNAIL = "thumbnail";
+    public static String VIDEO_PUBLISHED_AT = "published_time";
     public static String VIDEO_DESCRIPTION = "description";
     public static String FAVOURITE_REF = "fav_videos";
     public static String COMMENT_REF = "comments";
@@ -99,4 +100,13 @@ public class Constants {
 
 
     }
+
+    public static final String HOME = "home";
+    public static final String ALL_VIDEOS = "all_videos";
+    public static final String MY_VIDEOS = "my_videos";
+    public static final String TAGS = "tags";
+    public static final String SAVED_SEARCH = "saved_search";
+
+
+
 }
