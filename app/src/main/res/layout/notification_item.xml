@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/video_list_by_tag_height"
+    android:layout_margin="1dp"
+    android:background="@drawable/video_title_back">
+
+    <ImageView
+        android:id="@+id/video_thumbnail"
+        android:layout_width="@dimen/video_list_by_tag_image_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:layout_width="@dimen/video_list_by_tag_image_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:text="@string/icon_youtube_play"
+        android:textColor="@color/color_youtube_play"
+        android:textSize="@dimen/size_youtube_play" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/video_thumbnail"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/intro_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/toolbar_color"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/toolbar_color"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/border_color"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

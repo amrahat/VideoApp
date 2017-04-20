@@ -21,6 +21,8 @@ public class Constants {
     public static final String USER_IMAGE = "image" ;
     public static final String SEARCH_REF = "search";
     public static final String LIKE_REF = "likes";
+    public static final String VIDEO_ID = "video_id";
+    public static final String TAG = "tag";
     public static String FACEBOOK_LIKE_COUNT = "facebook_like_count";
     public static String FACEBOOK_COMMENT_COUNT = "facebook_comment_count";
     public static String FACEBOOK_POST_ID = "facebook_post_id";
@@ -33,6 +35,8 @@ public class Constants {
     public static String FAVOURITE_REF = "fav_videos";
     public static String COMMENT_REF = "comments";
     public static String FAVOURITE_TAG_REF = "fav_tag";
+    public static String NOTIFICATION_REF = "notifications";
+    public static String TIMESTAMP = "timestamp";
     String dataUrl = "https://www.googleapis.com/youtube/v3/videos?id=I6eH0ewFyCM" +
             "&key=AIzaSyDzm8kggHcd1t4rC9_SbGBg1CfO71za0gM" +
             "&part=contentDetails,snippet,,statistics,status";

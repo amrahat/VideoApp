@@ -66,12 +66,15 @@ public class VideoListByTagAdapter2 extends RecyclerView.Adapter<VideoListByTagA
         }
 
         if (video.getCommentCount() == null) {
+            holder.commentCount.setText("0");
+
         } else {
             holder.commentCount.setText(video.getCommentCount());
 
         }
 
         if (video.getLikeCount() == null) {
+            holder.likeCount.setText("0");
 
         } else {
             holder.likeCount.setText(video.getLikeCount());

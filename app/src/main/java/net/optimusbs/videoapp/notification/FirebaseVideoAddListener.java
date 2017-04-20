@@ -21,6 +21,7 @@ import android.util.Log;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -117,12 +118,12 @@ public class FirebaseVideoAddListener extends Service {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final long count = dataSnapshot.getChildrenCount();
                 final long[] counter = {0};
-                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     dataSnapshot1.getRef().addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             counter[0]++;
-                            if(counter[0]==count){
+                            if (counter[0] == count) {
                                 doneLoadingTagData = true;
                             }
                         }
@@ -143,37 +144,37 @@ public class FirebaseVideoAddListener extends Service {
         fireBaseClass.getTagRef().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Log.d(TAG, "onChildAdded: "+dataSnapshot.getKey());
-                    final String tagname = dataSnapshot.getKey();
-                    dataSnapshot.getRef().addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            if(doneLoadingTagData) {
-                                Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
-                                showNotification(tagname, (String) dataSnapshot.getValue());
-                            }
+                Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
+                final String tagname = dataSnapshot.getKey();
+                dataSnapshot.getRef().addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        if (doneLoadingTagData) {
+                            Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
+                            showNotification(tagname, (String) dataSnapshot.getValue());
                         }
+                    }
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                    }
+                });
 
             }
 
@@ -222,21 +223,18 @@ public class FirebaseVideoAddListener extends Service {
         });
     }
 
-    private void showNotification(String videoId, String title, String thumbnail, String tagName) {
+    private void showNotification(String videoId, final String title, String thumbnail, String tagName) {
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.beautify_logo_noti_icon_22);
         mBuilder.setContentTitle("New video under " + tagName);
-        if (!TextUtils.isEmpty(title)) {
-            mBuilder.setContentText(title);
-        } else {
-            mBuilder.setContentText("Click to see the video");
-        }
+
 
         Intent resultIntent = new Intent(this, VideoPlayer.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(VideoPlayer.class);
         Bundle bundle = new Bundle();
         bundle.putString("video_id", videoId);
+        bundle.putString("tag", tagName);
         resultIntent.putExtra("bundle", bundle);
 
         stackBuilder.addNextIntent(resultIntent);
@@ -246,14 +244,24 @@ public class FirebaseVideoAddListener extends Service {
 
         mBuilder.setSound(uri);
         mBuilder.setAutoCancel(true);
-        final Notification notification = mBuilder.build();
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
         if (!TextUtils.isEmpty(thumbnail)) {
             Picasso.with(getApplicationContext()).load(thumbnail).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     mBuilder.setLargeIcon(bitmap);
-                    mBuilder.setStyle(new android.support.v4.app.NotificationCompat.BigPictureStyle().bigPicture(bitmap));
+                    android.support.v4.app.NotificationCompat.BigPictureStyle bigPictureStyle = new android.support.v4.app.NotificationCompat.BigPictureStyle();
+                    if (!TextUtils.isEmpty(title)) {
+                        bigPictureStyle.setSummaryText(title);
+
+                    } else {
+                        bigPictureStyle.setSummaryText("Click to see the video");
+
+                    }
+                    bigPictureStyle.bigPicture(bitmap);
+                    mBuilder.setStyle(bigPictureStyle);
+                    final Notification notification = mBuilder.build();
+                    notification.flags |= Notification.FLAG_AUTO_CANCEL;
                     NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     mNotificationManager.notify(getUniqueTime(), notification);
                 }
@@ -269,9 +277,23 @@ public class FirebaseVideoAddListener extends Service {
                 }
             });
         } else {
+            if (!TextUtils.isEmpty(title)) {
+                mBuilder.setContentText(title);
+
+            } else {
+                mBuilder.setContentText("Click to see the video");
+
+            }
+            final Notification notification = mBuilder.build();
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(getUniqueTime(), notification);
         }
+
+        String pushKey = fireBaseClass.getNotificationRef().push().getKey();
+        fireBaseClass.getNotificationRef().child(pushKey).child(Constants.VIDEO_ID).setValue(videoId);
+        fireBaseClass.getNotificationRef().child(pushKey).child(Constants.TAG).setValue(tagName);
+        fireBaseClass.getNotificationRef().child(pushKey).child(Constants.TIMESTAMP).setValue(ServerValue.TIMESTAMP);
 
     }
 
