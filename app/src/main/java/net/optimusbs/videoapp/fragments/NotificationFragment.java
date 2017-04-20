@@ -103,7 +103,7 @@ public class NotificationFragment extends Fragment {
                             newNotifications.add(firebaseNotification);
 
                             if (counter[0] == childCount) {
-                                //notifyrecyclerview
+                                //notifyrecyclerviewjkhkjhkjkkjh
                                 DatabaseReference timestampRef = FirebaseDatabase.getInstance().getReference("timestampref");
                                 timestampRef.addValueEventListener(new ValueEventListener() {
                                     @Override
